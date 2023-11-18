@@ -3,34 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package UI;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JFrame;
-
-import Component.Menu;
-import Component.PanelBoder;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import javax.swing.ImageIcon;
 
 /**
  *
  * @author DELL
  */
-public class ChangePassword extends JFrame {
+public class ChangePassword extends javax.swing.JFrame {
 
     /**
      * Creates new form ChangePassword
      */
     public ChangePassword() {
-    	addWindowListener(new WindowAdapter() {
-    		@Override
-    		public void windowClosing(WindowEvent e) {
-    			dispose();
-    		}
-    	});
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -43,50 +30,54 @@ public class ChangePassword extends JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-    	setBounds(0, 0, 764, 387);
-    	
+    	addWindowListener(new WindowAdapter() {
+    		@Override
+    		public void windowClosing(WindowEvent e) {
+    			dispose();
+    		}
+    	});
 
-    	PanelBoder panelBoder1 = new PanelBoder();
-        Menu menu = new Menu();
-        menu.setBounds(0, 0, 277, 350);
+        panelBoder1 = new Component.PanelBoder();
+        menu1 = new Component.Menu();
         jLabel1 = new javax.swing.JLabel();
-        jLabel1.setBounds(10, 79, 257, 0);
         jTextField1 = new javax.swing.JTextField();
-        jTextField1.setBounds(305, 136, 190, 20);
         jSeparator1 = new javax.swing.JSeparator();
-        jSeparator1.setBounds(305, 156, 190, 13);
         jSeparator2 = new javax.swing.JSeparator();
-        jSeparator2.setBounds(305, 223, 191, 16);
         jLabel3 = new javax.swing.JLabel();
-        jLabel3.setBounds(390, 55, 223, 41);
         jLabel2 = new javax.swing.JLabel();
-        jLabel2.setBounds(305, 114, 99, 20);
         jLabel4 = new javax.swing.JLabel();
-        jLabel4.setBounds(305, 175, 92, 20);
         jLabel5 = new javax.swing.JLabel();
-        jLabel5.setBounds(520, 114, 67, 20);
         jSeparator3 = new javax.swing.JSeparator();
-        jSeparator3.setBounds(520, 156, 190, 13);
         jLabel6 = new javax.swing.JLabel();
-        jLabel6.setBounds(520, 175, 123, 20);
         jSeparator4 = new javax.swing.JSeparator();
-        jSeparator4.setBounds(520, 223, 190, 13);
         jPasswordField2 = new javax.swing.JPasswordField();
-        jPasswordField2.setBounds(520, 201, 190, 16);
         jPasswordField3 = new javax.swing.JPasswordField();
-        jPasswordField3.setBounds(305, 201, 191, 16);
         jPasswordField1 = new javax.swing.JPasswordField();
-        jPasswordField1.setBounds(520, 139, 190, 16);
         jButton1 = new javax.swing.JButton();
-        jButton1.setBounds(518, 247, 192, 36);
         jButton2 = new javax.swing.JButton();
-        jButton2.setBounds(305, 247, 195, 36);
 
 //        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         panelBoder1.setOpaque(true);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\FPT_Polytechnic\\FALL_2023\\BLOCK2\\DuAn1\\HotelManagement\\src\\main\\resource\\icon\\logo2.png"));
+        jLabel1.setIcon(new ImageIcon(ChangePassword.class.getResource("/Icon/logo2.png"))); // NOI18N
+
+        javax.swing.GroupLayout menu1Layout = new javax.swing.GroupLayout(menu1);
+        menu1.setLayout(menu1Layout);
+        menu1Layout.setHorizontalGroup(
+            menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menu1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        menu1Layout.setVerticalGroup(
+            menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menu1Layout.createSequentialGroup()
+                .addGap(79, 79, 79)
+                .addComponent(jLabel1)
+                .addContainerGap(87, Short.MAX_VALUE))
+        );
 
         jTextField1.setBackground(new java.awt.Color(255, 255, 255));
         jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -147,7 +138,6 @@ public class ChangePassword extends JFrame {
                 jPasswordField3ActionPerformed(evt);
             }
         });
-        getContentPane().setBounds(0, 0, 730, 371);
 
         jPasswordField1.setBackground(new java.awt.Color(255, 255, 255));
         jPasswordField1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -168,63 +158,105 @@ public class ChangePassword extends JFrame {
         jButton2.setIcon(new ImageIcon(ChangePassword.class.getResource("/Icon/check.png"))); // NOI18N
         jButton2.setText("ĐỒNG Ý");
         jButton2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-        panelBoder1.add(menu);
-        panelBoder1.add(jLabel2);
-        panelBoder1.add(jTextField1);
-        panelBoder1.add(jSeparator1);
-        panelBoder1.add(jSeparator3);
-        panelBoder1.add(jLabel5);
-        panelBoder1.add(jPasswordField1);
-        panelBoder1.add(jSeparator2);
-        panelBoder1.add(jLabel4);
-        panelBoder1.add(jPasswordField3);
-        panelBoder1.add(jPasswordField2);
-        panelBoder1.add(jSeparator4);
-        panelBoder1.add(jLabel6);
-        panelBoder1.add(jButton2);
-        panelBoder1.add(jButton1);
-        panelBoder1.add(jLabel3);
-        GroupLayout groupLayout = new GroupLayout(getContentPane());
-        groupLayout.setHorizontalGroup(
-        	groupLayout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(groupLayout.createSequentialGroup()
-        			.addComponent(panelBoder1, GroupLayout.DEFAULT_SIZE, 752, Short.MAX_VALUE)
-        			.addContainerGap())
-        );
-        groupLayout.setVerticalGroup(
-        	groupLayout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(groupLayout.createSequentialGroup()
-        			.addComponent(panelBoder1, GroupLayout.PREFERRED_SIZE, 356, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap(172, Short.MAX_VALUE))
-        );
-        panelBoder1.setLayout(null);
-        panelBoder1.add(menu);
-        menu.setLayout(null);
-        menu.add(jLabel1);
-        
-        lblNewLabel = new JLabel("");
-        lblNewLabel.setIcon(new ImageIcon(ChangePassword.class.getResource("/Icon/logo2.png")));
-        lblNewLabel.setBounds(0, 0, 277, 350);
-        menu.add(lblNewLabel);
-        panelBoder1.add(jLabel2);
-        panelBoder1.add(jTextField1);
-        panelBoder1.add(jSeparator1);
-        panelBoder1.add(jSeparator3);
-        panelBoder1.add(jLabel5);
-        panelBoder1.add(jPasswordField1);
-        panelBoder1.add(jSeparator2);
-        panelBoder1.add(jLabel4);
-        panelBoder1.add(jPasswordField3);
-        panelBoder1.add(jPasswordField2);
-        panelBoder1.add(jSeparator4);
-        panelBoder1.add(jLabel6);
-        panelBoder1.add(jButton2);
-        panelBoder1.add(jButton1);
-        panelBoder1.add(jLabel3);
-        
-//        getContentPane().setLayout(groupLayout);
 
-//        pack();
+        javax.swing.GroupLayout panelBoder1Layout = new javax.swing.GroupLayout(panelBoder1);
+        panelBoder1.setLayout(panelBoder1Layout);
+        panelBoder1Layout.setHorizontalGroup(
+            panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelBoder1Layout.createSequentialGroup()
+                .addComponent(menu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelBoder1Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelBoder1Layout.createSequentialGroup()
+                                    .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel2)
+                                        .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)))
+                                    .addGap(25, 25, 25)
+                                    .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jSeparator3)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)))
+                                .addGroup(panelBoder1Layout.createSequentialGroup()
+                                    .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jPasswordField3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
+                                    .addGap(24, 24, 24)
+                                    .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel6))))
+                            .addGroup(panelBoder1Layout.createSequentialGroup()
+                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(28, 28, 28))
+                    .addGroup(panelBoder1Layout.createSequentialGroup()
+                        .addGap(113, 113, 113)
+                        .addComponent(jLabel3)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        panelBoder1Layout.setVerticalGroup(
+            panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(menu1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panelBoder1Layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(jLabel3)
+                .addGap(18, 18, 18)
+                .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelBoder1Layout.createSequentialGroup()
+                        .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel5))
+                        .addGap(2, 2, 2)
+                        .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelBoder1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(1, 1, 1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBoder1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPasswordField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(8, 8, 8)
+                .addGroup(panelBoder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panelBoder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 1, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelBoder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -287,8 +319,7 @@ public class ChangePassword extends JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTextField jTextField1;
-    private Menu menu1;
-    private PanelBoder panelBoder1;
-    private JLabel lblNewLabel;
+    private Component.Menu menu1;
+    private Component.PanelBoder panelBoder1;
     // End of variables declaration//GEN-END:variables
 }

@@ -160,7 +160,7 @@ public class Main extends JFrame {
 	    Connection conn = null;
 	    try {
 	        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-	        conn = DriverManager.getConnection("jdbc:sqlserver://NHOM4:1433;user=sa;password=12345;databaseName=DOANTHANHBUT;encrypt=false");
+	        conn = DriverManager.getConnection("jdbc:sqlserver://DoanThanhBut\\DOANTHANHBUT:1433;user=NhomBon;password=123456;databaseName=SeafrontHotel;encrypt=false");
 	    } catch (Exception ex) {
 	        System.out.println("connect failure!");
 	        ex.printStackTrace();
