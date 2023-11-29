@@ -13,7 +13,15 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 
 public class Card2 extends JPanel {
+	private JLabel lbSoPhongDangThue;
+	
 
+	public JLabel getLbSoPhongDangThue() {
+		return lbSoPhongDangThue;
+	}
+	public void setLbSoPhongDangThue(JLabel lbSoPhongDangThue) {
+		this.lbSoPhongDangThue = lbSoPhongDangThue;
+	}
 	/**
 	 * Create the panel.
 	 */
@@ -32,7 +40,7 @@ public class Card2 extends JPanel {
 		lbPhongDangThue.setBounds(15, 62, 180, 17);
 		add(lbPhongDangThue);
 		
-		JLabel lbSoPhongDangThue = new JLabel("0");
+		lbSoPhongDangThue = new JLabel("0");
 		lbSoPhongDangThue.setForeground(Color.WHITE);
 		lbSoPhongDangThue.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbSoPhongDangThue.setBounds(15, 90, 62, 24);

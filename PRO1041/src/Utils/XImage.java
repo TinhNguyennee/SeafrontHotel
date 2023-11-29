@@ -26,7 +26,7 @@ public class XImage {
 
  
     public static boolean save(File src) {
-        File dst = new File("src\\main\\resource\\icon", src.getName());
+        File dst = new File("src\\Icon", src.getName());
         if (!dst.getParentFile().exists()) {
             dst.getParentFile().mkdirs();// tạo thư mục
         }
@@ -57,10 +57,9 @@ public class XImage {
             throw new RuntimeException(ex);
         }
     }
-     public static ImageIcon read(String fileName) {
-        File path = new File("src\\main\\resource\\icon", fileName);
-        Image img = new ImageIcon(path.getAbsolutePath()).getImage();
-        Image icon = img.getScaledInstance(195, 230,Image.SCALE_SMOOTH);
-        return new ImageIcon(icon);
+     public static ImageIcon read(String fileName, int width, int height) {
+        File path = new File("src\\Icon", fileName);
+        return new ImageIcon(new ImageIcon(path.getAbsolutePath()).getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
     }
+    
 }

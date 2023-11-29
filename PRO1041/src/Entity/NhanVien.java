@@ -17,14 +17,14 @@ public class NhanVien {
     private Date ngaySinh;
     private String soDienThoai;
     private String diaChi;
-    private  boolean gioiTinh;
-    private  String email;
+    private boolean gioiTinh;
+    private String email;
     private String hinh;
-    private String chucVu;
+    private int chucVu;
     
     //
 
-    public NhanVien(int maNhanVien, String CCCD, String tenNhanVien, Date ngaySinh, String soDienThoai, String diaChi, boolean gioiTinh, String email, String hinh, String chucVu) {
+    public NhanVien(int maNhanVien, String CCCD, String tenNhanVien, Date ngaySinh, String soDienThoai, String diaChi, boolean gioiTinh, String email, String hinh, int chucVu) {
         this.maNhanVien = maNhanVien;
         this.CCCD = CCCD;
         this.tenNhanVien = tenNhanVien;
@@ -115,11 +115,11 @@ public class NhanVien {
         this.hinh = hinh;
     }
 
-    public String getChucVu() {
+    public int getChucVu() {
         return chucVu;
     }
 
-    public void setChucVu(String chucVu) {
+    public void setChucVu(int chucVu) {
         this.chucVu = chucVu;
     }
     

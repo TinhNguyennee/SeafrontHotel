@@ -1,24 +1,31 @@
 package UI;
 
+import java.awt.Color;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.Color;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
-import javax.swing.border.BevelBorder;
+
+import Utils.ConnectDatabase;
 
 public class PanelCustomerChild extends JFrame {
 
@@ -31,6 +38,22 @@ public class PanelCustomerChild extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(StaffMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(StaffMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(StaffMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(StaffMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -39,11 +62,11 @@ public class PanelCustomerChild extends JFrame {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			    try {
-			    	  UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-			    	} catch (Exception e) {
-			    	  // handle exception
-			    	}
+//			    try {
+//			    	  UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+//			    	} catch (Exception e) {
+//			    	  // handle exception
+//			    	}
 			}
 		});
 	}
@@ -58,6 +81,8 @@ public class PanelCustomerChild extends JFrame {
     			dispose();
     		}
     	});
+    	
+		Utils.ConnectDatabase con = new ConnectDatabase();
 //		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 400, 300);
 		contentPane = new JPanel();
@@ -132,5 +157,159 @@ public class PanelCustomerChild extends JFrame {
 			}
 		});
 		
+	
+		
+		
+	Connection conn = con.getConnection();
+	String query = "SELECT chitiet FROM LoaiKhachHang";
+	try (Statement stmt = conn.createStatement();
+	     ResultSet rs = stmt.executeQuery(query)) {
+	    while (rs.next()) {
+	        String chitiet = rs.getString("chitiet");
+	        cbbLoaiKhach.addItem(chitiet);
+	    }
+	} catch (SQLException ex) {
+	    ex.printStackTrace();
 	}
+	
+	
+	
+	btThemKhach.addActionListener(new ActionListener() {
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+	        String hoVaTen = txtHoVaTen.getText().trim();
+	        String sdt = txtSDT.getText().trim();
+	        String email = txtEmail.getText().trim();
+	        String loaiKhach = cbbLoaiKhach.getSelectedItem().toString();
+
+	        Connection conn = con.getConnection();
+
+	        if((Utils.Validate.isTxtEmpty(hoVaTen))||((Utils.Validate.isTxtEmpty(sdt))&&(Utils.Validate.isTxtEmpty(email)))) {
+	        	 JOptionPane.showMessageDialog(contentPane, "Vui lòng điền đầy đủ thông tin.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+	        }else if(!Utils.Validate.isValidEmail(email)&&!Utils.Validate.isTxtEmpty(email)){
+	        	JOptionPane.showMessageDialog(contentPane, "Vui lòng điền đúng định dạng abc@gmail.com", "Lỗi", JOptionPane.ERROR_MESSAGE);
+	        }else if(!Utils.Validate.isValidPhoneNumber(sdt)&&!Utils.Validate.isTxtEmpty(sdt)) {
+	        	JOptionPane.showMessageDialog(contentPane, "Vui lòng nhập số điện thoại đúng định dạng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+	        }else if (loaiKhach.equalsIgnoreCase("Khách hàng cá nhân")) {
+	        	
+	        	try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO KhachHang (tenKhachHang, soDienThoai, email, maLoai) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+	        	    stmt.setString(1, hoVaTen);
+	        	    stmt.setString(2, sdt);
+	        	    stmt.setString(3, email);
+	        	    stmt.setInt(4, 1);
+	        	    int rowsAffected = stmt.executeUpdate();
+	        	    if (rowsAffected > 0) {
+	        	        ResultSet generatedKeys = stmt.getGeneratedKeys();
+	        	        generatedKeys.next();
+	        	            int maKhachHang = generatedKeys.getInt(1);
+	        	            
+	        	            // Thực hiện các thao tác khác với giá trị maKhachHang ở đây
+	        	            // Ví dụ: thêm dữ liệu vào bảng NhomKhachHang
+	        	            
+
+
+	        	                java.time.LocalDate ngayHienTai = java.time.LocalDate.now();
+	        	                try (PreparedStatement stmt3 = conn.prepareStatement("INSERT INTO DatPhong (ngayDatPhong, ngayBatDau, ngayKetThuc, tienDatCoc, maKhachHang, maPhong, maNhanVien, trangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+	        	                    stmt3.setObject(1, ngayHienTai);
+	        	                    stmt3.setObject(2, PanelBooking.getNgayO());
+	        	                    stmt3.setObject(3, PanelBooking.getNgayTra());
+	        	                    stmt3.setInt(4, 0);
+	        	                    stmt3.setInt(5, maKhachHang);
+	        	                    stmt3.setInt(6, PanelBooking.getPhong());
+	        	                    stmt3.setInt(7, PanelBooking.getNguoiLap());
+	        	                    stmt3.setNString(8, "Chưa thanh toán");
+	        	                    stmt3.executeUpdate();
+	        	                    Utils.MsgBox.alert(contentPane, "Thêm thành công");
+	        	                    
+	        	                 // Chuẩn bị câu truy vấn PreparedStatement
+	        	                    String query = "UPDATE Phong SET trangThaiPhong = ? WHERE maPhong = ?";
+	        	                    PreparedStatement pstmt = conn.prepareStatement(query);
+	        	                    pstmt.setNString(1, "Đã đặt");
+	        	                    pstmt.setInt(2, PanelBooking.getPhong());
+	        	                    pstmt.executeUpdate();
+	        	                    
+	        	                    dispose();
+	        	                } catch (SQLException ex) {
+	        	                    ex.printStackTrace();
+	        	                }
+	        	            
+	        	                
+	        	        
+	        	    } else {
+	        	        Utils.MsgBox.alert(contentPane, "Thêm thất bại");
+	        	    }
+	        	} catch (SQLException ex) {
+	        	    ex.printStackTrace();
+	        	}
+	            
+	        }else if(loaiKhach.equalsIgnoreCase("Khách hàng theo nhóm")) {
+	        	
+	        	try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO KhachHang (tenKhachHang, soDienThoai, email, maLoai) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+	        	    stmt.setString(1, hoVaTen);
+	        	    stmt.setString(2, sdt);
+	        	    stmt.setString(3, email);
+	        	    stmt.setInt(4, 2);
+	        	    int rowsAffected = stmt.executeUpdate();
+	        	    if (rowsAffected > 0) {
+	        	        ResultSet generatedKeys = stmt.getGeneratedKeys();
+	        	        generatedKeys.next();
+	        	            int maKhachHang = generatedKeys.getInt(1);
+	        	            
+	        	            // Thực hiện các thao tác khác với giá trị maKhachHang ở đây
+	        	            // Ví dụ: thêm dữ liệu vào bảng NhomKhachHang
+	        	            
+	        	            try (PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO NhomKhachHang (maKhachHang) VALUES (?)")) {
+	        	                stmt2.setInt(1, maKhachHang);
+	        	                stmt2.executeUpdate();
+
+	        	                java.time.LocalDate ngayHienTai = java.time.LocalDate.now();
+	        	                try (PreparedStatement stmt3 = conn.prepareStatement("INSERT INTO DatPhong (ngayDatPhong, ngayBatDau, ngayKetThuc, tienDatCoc, maKhachHang, maPhong, maNhanVien, trangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+	        	                    stmt3.setObject(1, ngayHienTai);
+	        	                    stmt3.setObject(2, PanelBooking.getNgayO());
+	        	                    stmt3.setObject(3, PanelBooking.getNgayTra());
+	        	                    stmt3.setInt(4, 0);
+	        	                    stmt3.setInt(5, maKhachHang);
+	        	                    stmt3.setInt(6, PanelBooking.getPhong());
+	        	                    stmt3.setInt(7, PanelBooking.getNguoiLap());
+	        	                    stmt3.setNString(8, "Chưa thanh toán");
+	        	                    stmt3.executeUpdate();
+	        	                    Utils.MsgBox.alert(contentPane, "Thêm thành công");
+	        	                    
+		        	                 // Chuẩn bị câu truy vấn PreparedStatement
+	        	                    String query = "UPDATE Phong SET trangThaiPhong = ? WHERE maPhong = ?";
+	        	                    PreparedStatement pstmt = conn.prepareStatement(query);
+	        	                    pstmt.setNString(1, "Đã đặt");
+	        	                    pstmt.setInt(2, PanelBooking.getPhong());
+	        	                    pstmt.executeUpdate();
+	        	                    
+	        	                    dispose();
+	        	                } catch (SQLException ex) {
+	        	                    ex.printStackTrace();
+	        	                }
+	        	            } catch (SQLException ex) {
+	        	                ex.printStackTrace();
+	        	            }
+	        	        
+	        	        dispose();
+	        	    } else {
+	        	        Utils.MsgBox.alert(contentPane, "Thêm thất bại");
+	        	    }
+	        	} catch (SQLException ex) {
+	        	    ex.printStackTrace();
+	        	}
+	        	
+	        }
+	        
+	        
+	    }
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+	}	
 }

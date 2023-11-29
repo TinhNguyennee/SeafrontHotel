@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -11,7 +13,14 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 
 public class Card extends JPanel {
+	private JLabel lbSoPhongTrong;
 
+	public JLabel getLbSoPhongTrong() {
+		return lbSoPhongTrong;
+	}
+	public void setLbSoPhongTrong(JLabel lbSoPhongTrong) {
+		this.lbSoPhongTrong = lbSoPhongTrong;
+	}
 	/**
 	 * Create the panel.
 	 */
@@ -30,11 +39,15 @@ public class Card extends JPanel {
 		lbPhongTrong.setBounds(15, 62, 132, 17);
 		add(lbPhongTrong);
 		
-		JLabel lbSoPhongTrong = new JLabel("0");
+		lbSoPhongTrong = new JLabel("0");
 		lbSoPhongTrong.setForeground(Color.WHITE);
 		lbSoPhongTrong.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbSoPhongTrong.setBounds(15, 90, 62, 24);
 		add(lbSoPhongTrong);
+		
+//		PanelMain panelmain = new PanelMain();
+//		lbSoPhongTrong.setText(String.valueOf(panelmain.getCountConTrong()));
+		
 	}
 	 @Override
 	    protected void paintComponent(Graphics g) {

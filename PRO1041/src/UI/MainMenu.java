@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -15,11 +17,11 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 
 public class MainMenu extends JPanel {
-	private Main main;
+	private StaffMain main;
 	/**
 	 * Create the panel.
 	 */
-	public MainMenu(Main main) {
+	public MainMenu(StaffMain main) {
 //		this.main = main;
 		setOpaque(false);
 		setBounds(0, 0, 235, 550);
@@ -105,13 +107,27 @@ public class MainMenu extends JPanel {
         		lbbtHoaDon.setOpaque(false);
         		lbbtHoaDon.setBackground(null);
                 lbbtDoiMatKhau.setOpaque(false);
-                lbbtDoiMatKhau.setBackground(null);      
+                lbbtDoiMatKhau.setBackground(null);   
                 
-                main.getPanelmain().setVisible(true);
-                main.getPanelbooking().setVisible(false);
-                main.getPanelcustomer().setVisible(false);
-                main.getPanelbill().setVisible(false);
-                main.getPanelservice().setVisible(false);
+        		PanelMain panelmain = new PanelMain();
+        		
+        		main.setPanelmain(panelmain);
+                
+        		main.getPanel().removeAll();
+        		main.getPanel().add(main.getPanelmain());
+        		main.getPanelmain().setVisible(true);
+        		main.getPanel().revalidate();
+        		main.getPanel().repaint();
+        		
+
+                
+//                main.getPanelmain().setVisible(true);
+//                main.getPanelbooking().setVisible(false);
+//                main.getPanelcustomer().setVisible(false);
+//                main.getPanelbill().setVisible(false);
+//                main.getPanelservice().setVisible(false);
+                
+
             }
         });
         lbbtPhong.addMouseListener(new MouseAdapter() {
@@ -130,11 +146,22 @@ public class MainMenu extends JPanel {
         		lbbtDoiMatKhau.setOpaque(false);
         		lbbtDoiMatKhau.setBackground(null);
         		
-                main.getPanelmain().setVisible(false);
-                main.getPanelbooking().setVisible(true);
-                main.getPanelcustomer().setVisible(false);
-                main.getPanelbill().setVisible(false);
-                main.getPanelservice().setVisible(false);
+        		PanelBooking panelbooking = new PanelBooking(main);
+        		
+        		main.setPanelbooking(panelbooking);
+        		
+        		main.getPanel().removeAll();
+        		main.getPanel().add(main.getPanelbooking());
+        		main.getPanelbooking().setVisible(true);
+        		main.getPanel().revalidate();
+        		main.getPanel().repaint();
+        		
+        		
+//                main.getPanelmain().setVisible(false);
+//                main.getPanelbooking().setVisible(true);
+//                main.getPanelcustomer().setVisible(false);
+//                main.getPanelbill().setVisible(false);
+//                main.getPanelservice().setVisible(false);
         	}
         });
         lbbtDichVu.addMouseListener(new MouseAdapter() {
@@ -153,11 +180,21 @@ public class MainMenu extends JPanel {
         		lbbtDoiMatKhau.setOpaque(false);
         		lbbtDoiMatKhau.setBackground(null);
         		
-                main.getPanelmain().setVisible(false);
-                main.getPanelbooking().setVisible(false);
-                main.getPanelcustomer().setVisible(false);
-                main.getPanelbill().setVisible(false);
-                main.getPanelservice().setVisible(true);
+        		PanelService panelservice = new PanelService();
+        		
+        		main.setPanelservice(panelservice);
+        		
+        		main.getPanel().removeAll();
+        		main.getPanel().add(main.getPanelservice());
+        		main.getPanelservice().setVisible(true);
+        		main.getPanel().revalidate();
+        		main.getPanel().repaint();
+        		
+//                main.getPanelmain().setVisible(false);
+//                main.getPanelbooking().setVisible(false);
+//                main.getPanelcustomer().setVisible(false);
+//                main.getPanelbill().setVisible(false);
+//                main.getPanelservice().setVisible(true);
         	}
         });
         lbbtKhachHang.addMouseListener(new MouseAdapter() {
@@ -176,11 +213,21 @@ public class MainMenu extends JPanel {
         		lbbtDoiMatKhau.setOpaque(false);
         		lbbtDoiMatKhau.setBackground(null);	
         		
-                main.getPanelmain().setVisible(false);
-                main.getPanelbooking().setVisible(false);
-                main.getPanelcustomer().setVisible(true);
-                main.getPanelbill().setVisible(false);
-                main.getPanelservice().setVisible(false);
+        		PanelCustomer panelcustomer = new PanelCustomer();
+        		
+        		main.setPanelcustomer(panelcustomer);
+        		
+        		main.getPanel().removeAll();
+        		main.getPanel().add(main.getPanelcustomer());
+        		main.getPanelcustomer().setVisible(true);
+        		main.getPanel().revalidate();
+        		main.getPanel().repaint();
+        		
+//                main.getPanelmain().setVisible(false);
+//                main.getPanelbooking().setVisible(false);
+//                main.getPanelcustomer().setVisible(true);
+//                main.getPanelbill().setVisible(false);
+//                main.getPanelservice().setVisible(false);
         	}
         });
         lbbtHoaDon.addMouseListener(new MouseAdapter() {
@@ -199,11 +246,21 @@ public class MainMenu extends JPanel {
         		lbbtDoiMatKhau.setOpaque(false);
         		lbbtDoiMatKhau.setBackground(null);
         		
-                main.getPanelmain().setVisible(false);
-                main.getPanelbooking().setVisible(false);
-                main.getPanelcustomer().setVisible(false);
-                main.getPanelbill().setVisible(true);
-                main.getPanelservice().setVisible(false);
+        		PanelBill panelbill = new PanelBill();
+        		
+        		main.setPanelbill(panelbill);
+        		
+        		main.getPanel().removeAll();
+        		main.getPanel().add(main.getPanelbill());
+        		main.getPanelbill().setVisible(true);
+        		main.getPanel().revalidate();
+        		main.getPanel().repaint();
+        		
+//                main.getPanelmain().setVisible(false);
+//                main.getPanelbooking().setVisible(false);
+//                main.getPanelcustomer().setVisible(false);
+//                main.getPanelbill().setVisible(true);
+//                main.getPanelservice().setVisible(false);
         	}
         });
         lbbtDoiMatKhau.addMouseListener(new MouseAdapter() {
@@ -222,9 +279,12 @@ public class MainMenu extends JPanel {
         		lbbtDoiMatKhau.setOpaque(true);
         		lbbtDoiMatKhau.setBackground(new Color(88,206,249));
         		
-        		main.getChangepassword().setVisible(true);
+        		ChangePassJFrame changepassjframe = new ChangePassJFrame();
+        		changepassjframe.setVisible(true);
         	}
         });
+        
+
 		
 	}
     @Override

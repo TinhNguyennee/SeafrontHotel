@@ -1,29 +1,36 @@
 package UI;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
 
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
+import Utils.ConnectDatabase;
 
 public class PanelPrintBill extends JFrame {
 
@@ -33,19 +40,36 @@ public class PanelPrintBill extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(PanelPrintBill.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(PanelPrintBill.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(PanelPrintBill.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(PanelPrintBill.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PanelPrintBill frame = new PanelPrintBill();
+					int maDatPhong = 0;
+					PanelPrintBill frame = new PanelPrintBill(maDatPhong);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			    try {
-			    	  UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-			    	} catch (Exception e) {
-			    	  // handle exception
-			    	}
+//			    try {
+//			    	  UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+//			    	} catch (Exception e) {
+//			    	  // handle exception
+//			    	}
 			}
 		});
 	}
@@ -53,13 +77,14 @@ public class PanelPrintBill extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public PanelPrintBill() {
+	public PanelPrintBill(int maDatPhong) {
     	addWindowListener(new WindowAdapter() {
     		@Override
     		public void windowClosing(WindowEvent e) {
     			dispose();
     		}
     	});
+		Utils.ConnectDatabase con = new ConnectDatabase();
 //		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 625);
 		setLocationRelativeTo(contentPane);
@@ -135,6 +160,7 @@ public class PanelPrintBill extends JFrame {
      // Tạo Renderer tùy chỉnh
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setBackground(new Color(240,240,240)); // Đặt màu nền cho Renderer
+		renderer.setHorizontalAlignment(JLabel.CENTER);
 
         // Áp dụng Renderer cho tất cả các ô trong bảng
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -192,6 +218,274 @@ public class PanelPrintBill extends JFrame {
 		lbSoTongTien.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lbSoTongTien.setBounds(317, 420, 125, 27);
 		contentPane.add(lbSoTongTien);
+		
+		
+		
+		
+		
+		//lấy thông tin từ mã đặt phòng
+		int maNhanVien = 0;
+		int maPhong = 0;
+		String trangThai = "";
+		Date ngayBatDau = null;
+		Date ngayKetThuc = null;
+		 try {
+	            // Kết nối tới CSDL
+				Connection conn = con.getConnection();
+
+	            // Truy vấn thông tin từ bảng DatPhong
+	            String query = "SELECT ngayBatDau, ngayKetThuc, maKhachHang, maPhong, maNhanVien, trangThai FROM DatPhong WHERE maDatPhong = ?";
+	            PreparedStatement statement = conn.prepareStatement(query);
+	            statement.setInt(1, maDatPhong);
+	            ResultSet result = statement.executeQuery();
+
+	            if (result.next()) {
+	                // In ra thông tin từ kết quả truy vấn
+	                ngayBatDau = result.getDate("ngayBatDau");
+	                ngayKetThuc = result.getDate("ngayKetThuc");
+	                int maKhachHang = result.getInt("maKhachHang");
+	                maPhong = result.getInt("maPhong");
+	                maNhanVien = result.getInt("maNhanVien");
+	                trangThai = result.getString("trangThai");
+	            } else {
+	                System.out.println("Không tìm thấy mã đặt phòng.");
+	            }
+
+	            // Đóng kết nối CSDL
+	            conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+		
+
+		 
+		 
+		 //lấy số ngày
+		 int soNgay = 0;
+		 if(trangThai.equalsIgnoreCase("Chưa thanh toán")) {
+			 soNgay = new Date(System.currentTimeMillis()).compareTo(ngayBatDau);
+
+			 if(soNgay==0) {
+				 soNgay=1;
+			 }
+			 
+		 }else if(trangThai.equalsIgnoreCase("Đã hoàn tất")) {
+			 soNgay = ngayKetThuc.compareTo(ngayBatDau);
+			 
+			 if(soNgay==0) {
+				 soNgay=1;
+			 }
+			
+		 }
+		 
+		 
+		 
+		 
+		 //lấy đơn giá phòng
+		 double giaPhong=0;
+		 try {
+	            // Kết nối tới CSDL
+			 Connection conn = con.getConnection();
+
+	            // Truy vấn thông tin từ bảng Phong
+	            String query = "SELECT giaPhong FROM Phong where maPhong = "+maPhong;
+	            Statement statement = conn.createStatement();
+	            ResultSet result = statement.executeQuery(query);
+
+	            if (result.next()) {
+	                // Lấy thông tin từ kết quả truy vấn
+
+	                giaPhong = result.getDouble("giaPhong");
+
+	            }
+
+	            // Đóng kết nối CSDL
+	            conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+		 
+		 
+		 
+		 int thanhTien = (int) (giaPhong*soNgay);
+		 
+		 
+		 
+		 
+		 
+		 //fill hóa đơn phòng cho table
+			DefaultTableModel model = (DefaultTableModel) table.getModel();
+			model.setRowCount(0);
+			
+			Vector<Object> row = new Vector<>();
+			
+			row.add("Phòng "+maPhong);
+			row.add(soNgay);
+			row.add(giaPhong);
+			row.add(thanhTien);
+			model.addRow(row);
+			
+		 
+		 
+			
+
+		 
+		 
+		 
+		 
+		//fill hóa đơn dịch vụ cho table
+			 try {
+		            // Kết nối tới CSDL
+				 Connection conn = con.getConnection();
+
+		            // Truy vấn thông tin từ bảng ChiTietDichVu và DichVu
+		            String query = "SELECT cdv.maDatPhong, dv.tenDichVu, cdv.soLuong, dv.donGia, (cdv.soLuong * dv.donGia) AS thanhTien " +
+		                    "FROM ChiTietDichVu cdv " +
+		                    "INNER JOIN DichVu dv ON cdv.maDichVu = dv.maDichVu " +
+		                    "WHERE maDatPhong = ?";
+		            PreparedStatement statement = conn.prepareStatement(query);
+		            statement.setInt(1, maDatPhong);
+		            ResultSet result = statement.executeQuery();
+
+		            while (result.next()) {
+		                // Lấy thông tin từ kết quả truy vấn
+		                String tenDichVu = result.getString("tenDichVu");
+		                int soLuong = result.getInt("soLuong");
+		                double donGia = result.getDouble("donGia");
+		                double thanhTien1 = result.getDouble("thanhTien");
+		                
+		    			Vector<Object> row1 = new Vector<>();
+		    			
+		    			row1.add(tenDichVu);
+		    			row1.add(soLuong);
+		    			row1.add(donGia);
+		    			row1.add(thanhTien1);
+		    			model.addRow(row1);
+
+		            }
+
+		            // Đóng kết nối CSDL
+		            conn.close();
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+			
+		 
+		 
+			 
+			 
+		 
+		 
+				// Lấy số lượng hàng trong JTable
+		        int rowCount = model.getRowCount();
+		        double tongTien = 0;
+
+		        // Lấy tất cả giá trị trong cột 1
+		        for (int row1 = 0; row1 < rowCount; row1++) {
+		            tongTien = tongTien + Double.valueOf(model.getValueAt(row1, 3).toString()) ; 
+		        }
+				
+		        lbSoTongTien.setText(tongTien+" Đ");
+		
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+		
+		
+		
+		
+		 //tạo hóa hơn 
+		 try {
+	            // Kết nối tới CSDL
+				Connection conn = con.getConnection();
+
+	            // Kiểm tra xem mã đặt phòng đã có hóa đơn hay chưa
+	            String checkQuery = "SELECT COUNT(*) FROM HoaDon WHERE maDatPhong = ?";
+	            PreparedStatement checkStatement = conn.prepareStatement(checkQuery);
+	            checkStatement.setInt(1, maDatPhong);
+	            ResultSet checkResult = checkStatement.executeQuery();
+	            checkResult.next();
+	            int count = checkResult.getInt(1);
+
+	            if (count == 0) {
+	            	String createQuery = "INSERT INTO HoaDon (ngayLapHoaDon, tongTien, maDatPhong, maNhanVien) VALUES (?, ?, ?, ?)";
+	            	PreparedStatement createStatement = conn.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS);
+	            	createStatement.setDate(1, new Date(System.currentTimeMillis()));
+	            	createStatement.setDouble(2, tongTien);
+	            	createStatement.setInt(3, maDatPhong);
+	            	createStatement.setInt(4, maNhanVien);
+	            	createStatement.executeUpdate();
+
+	            	ResultSet generatedKeys = createStatement.getGeneratedKeys();
+	            	if (generatedKeys.next()) {
+	            	    int maHoaDon = generatedKeys.getInt(1);
+	            	    lbMHD.setText("Mã: "+maHoaDon);
+	            	    lbNgay.setText("Ngày: "+new Date(System.currentTimeMillis()));
+	            	    
+	            	}
+//	                System.out.println("Đã tạo hóa đơn mới.");
+	            } else {
+//	                System.out.println("Mã đặt phòng đã có hóa đơn.");
+	            	
+	            	
+	            	String updateQuery = "UPDATE HoaDon SET ngayLapHoaDon = ?, tongTien = ?, maNhanVien = ? WHERE maDatPhong = ?";
+	            	PreparedStatement updateStatement = conn.prepareStatement(updateQuery);
+	            	updateStatement.setDate(1, new Date(System.currentTimeMillis()));
+	            	updateStatement.setDouble(2, tongTien);
+	            	updateStatement.setInt(3, maNhanVien);
+	            	updateStatement.setInt(4, maDatPhong);
+	            	updateStatement.executeUpdate();
+	            	
+	            	
+	            	
+	            	String selectQuery = "SELECT maHoaDon FROM HoaDon WHERE maDatPhong = ?";
+	            	PreparedStatement selectStatement = conn.prepareStatement(selectQuery);
+	            	selectStatement.setInt(1, maDatPhong);
+
+	            	ResultSet resultSet = selectStatement.executeQuery();
+	            	if (resultSet.next()) {
+	            	    int maHoaDon = resultSet.getInt("maHoaDon");
+	            	    lbMHD.setText("Mã: "+maHoaDon);
+	            	    lbNgay.setText("Ngày: "+new Date(System.currentTimeMillis()));
+	            	}
+	            	
+	            	
+	            	
+	            }
+	            
+	            
+	            
+
+	            // Đóng kết nối CSDL
+	            conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+		
+		
+		 
+		 
+		 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		btThoat.addActionListener(new ActionListener() {
 			
