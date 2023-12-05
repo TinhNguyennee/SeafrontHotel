@@ -1,6 +1,6 @@
 package Swing;
 
-import Component.StatusType;
+import Components.StatusType;
 
 public class CellStatus extends javax.swing.JPanel {
 

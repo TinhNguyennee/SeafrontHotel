@@ -16,11 +16,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
@@ -49,6 +49,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import Utils.ConnectDatabase;
 
@@ -342,6 +343,7 @@ public class PanelBooking extends JPanel {
 		jsp1.setLocation(0, 0);
 		jsp1.setSize(640, 186);
 		panel.add(jsp1);
+		
 
 		JButton btThemPhong = new JButton("Thêm");
 		btThemPhong.setFont(new Font("Arial", Font.BOLD, 16));
@@ -445,7 +447,7 @@ public class PanelBooking extends JPanel {
 
 
 					if(Utils.MsgBox.comfirm(null, "Bạn đã có khách hàng?")) {
-
+						
 						PanelCustomerSelect panelcustomerselect = new PanelCustomerSelect();
 						panelcustomerselect.setVisible(true);
 						
@@ -492,7 +494,10 @@ public class PanelBooking extends JPanel {
 
 
 						// Ngày ở hợp lệ, thực hiện hành động khác ở đây
-						main.getPanelcustomerchild().setVisible(true);
+						
+						
+						PanelCustomerChild panelcustomerchild = new PanelCustomerChild();
+						panelcustomerchild.setVisible(true);
 
 
 
@@ -767,12 +772,19 @@ public class PanelBooking extends JPanel {
 					"FROM DatPhong dp " +
 					"JOIN Phong p ON dp.maPhong = p.maPhong " +
 					"JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
-					"JOIN NhanVien nv ON dp.maNhanVien = nv.maNhanVien";
+					"JOIN NhanVien nv ON dp.maNhanVien = nv.maNhanVien " +
+					"ORDER BY dp.maDatPhong DESC";
 			ResultSet resultSet = statement.executeQuery(query);
 
 			// Tạo mô hình bảng
 			DefaultTableModel model = (DefaultTableModel) table_1.getModel();
 			model.setRowCount(0);
+			
+		    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+		    table_1.setRowSorter(sorter);
+		    
+
+		    
 
 			// Đổ dữ liệu từ ResultSet vào mô hình bảng
 			while (resultSet.next()) {
@@ -846,6 +858,10 @@ public class PanelBooking extends JPanel {
 							// Tạo mô hình bảng
 							DefaultTableModel model = (DefaultTableModel) table.getModel();
 							model.setRowCount(0);
+							
+						    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+						    table.setRowSorter(sorter);
+							
 							Vector<Object> row = new Vector<>();
 							row.add(maKhachHang);
 							row.add(tenKhachHang);
@@ -997,14 +1013,128 @@ public class PanelBooking extends JPanel {
 				}
 			}
 		});
+		
+		
+		
+		
+		
+		
+		
+		
+		//ấn vào nút thanh toán trên popup
+		menuItem1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+				
+				
+				
+				
+				//lấy mã đặt phòng
+				int selectedRow = table_1.getSelectedRow();
+				int maDatPhong = 0;
+				java.util.Date ngayO;
+				if(selectedRow==-1) {
+		    		Utils.MsgBox.alert(null, "Bạn chưa chọn đặt phòng để thanh toán");
+		    	}else {
+		    		maDatPhong = Integer.valueOf(table_1.getValueAt(selectedRow, 0).toString());
+		    		ngayO = (java.util.Date) table_1.getValueAt(selectedRow, 4);
+		    		String trangThai = table_1.getValueAt(selectedRow, 6).toString();
+		    		
+		    		
+		    		if(trangThai.equalsIgnoreCase("Đã hoàn tất")) {
+			    		Utils.MsgBox.alert(null, "Phòng này đã được thanh toán");
+			    		return;
+		    		}
+		    		
 
+		    		// Kiểm tra ngày hiện tại
+		            java.util.Date ngayHienTai = new java.util.Date();
+		            if (ngayHienTai.before(ngayO)) {
+		                Utils.MsgBox.alert(null, "Đặt trước không thể thanh toán");
+		            } else {
+		                PanelPay panelpay = new PanelPay(maDatPhong);
+		                panelpay.setVisible(true);
+		            }
 
+		    	}
+				
+				
+				
+				
+				
+				
+				
+			}
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		//ấn vào nút cài dịch vụ trên popup
+		menuItem2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				int selectedRow = table_1.getSelectedRow();
+				int maDatPhongTuBooking = Integer.valueOf(table_1.getValueAt(selectedRow, 0).toString());
+				String trangThai = table_1.getValueAt(selectedRow, 6).toString();
+				if(trangThai.equalsIgnoreCase("Đã hoàn tất")) {
+					Utils.MsgBox.error(null, "Mã đặt phòng này đã được thanh toán");
+					return;
+				}
+				
+				
+				PanelService panelservice = new PanelService(maDatPhongTuBooking);
+        		
+        		main.setPanelservice(panelservice);				
+				
+        		main.getPanel().removeAll();
+        		main.getPanel().add(main.getPanelservice());
+        		main.getPanelmain().setVisible(true);
+        		main.getPanel().revalidate();
+        		main.getPanel().repaint();
+				
+				
+				
+				
+			}
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		//ấn vào nút thêm thành viên trong popup
 		menuItem3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int row = table_1.getSelectedRow();
 				if (row != -1) {
 					int maDatPhong = (int) table_1.getValueAt(row, 0);
+					
+					
+					String check = table_1.getValueAt(row, 6).toString();
+					if(check.equalsIgnoreCase("Đã hoàn tất")) {
+						Utils.MsgBox.error(null, "Đã hoàn tất thanh toán, không thể thêm thành viên");
+						return;
+					}
+					
 
 					Connection conn = con.getConnection();
 
@@ -1056,7 +1186,7 @@ public class PanelBooking extends JPanel {
 		});
 
 
-
+//System.out.println(table_1.getValueAt(1, 6));
 
 	}
 	private void fillTenLoaiPhong(String selectedPhong) {

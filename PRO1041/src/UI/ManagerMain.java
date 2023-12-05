@@ -9,7 +9,7 @@ import java.awt.Color;
 
 import javax.swing.JComponent;
 
-import Component.EventMenuSelected;
+import Components.EventMenuSelected;
 
 /**
  *
@@ -56,6 +56,10 @@ public class ManagerMain extends javax.swing.JFrame {
 					setForm(new PanelStatistical());
 				} else if (index == 10) {
 					new ChangePassJFrame().setVisible(true);
+				} else if (index == 11) {
+					Utils.Auth.clear();
+					new LoginFrame().setVisible(true);
+					dispose();
 				}
 			}
 		});
@@ -73,8 +77,8 @@ public class ManagerMain extends javax.swing.JFrame {
 	private void initComponents() {
 
 		panelBorder1 = new Swing.PanelBorder();
-		menu = new Component.Menu3();
-		header2 = new Component.Header();
+		menu = new Components.Menu3();
+		header2 = new Components.Header();
 		mainPanel = new javax.swing.JPanel();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -170,9 +174,9 @@ public class ManagerMain extends javax.swing.JFrame {
 	}
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private Component.Header header2;
+	private Components.Header header2;
 	private javax.swing.JPanel mainPanel;
-	private Component.Menu3 menu;
+	private Components.Menu3 menu;
 	private Swing.PanelBorder panelBorder1;
 	// End of variables declaration//GEN-END:variables
 }

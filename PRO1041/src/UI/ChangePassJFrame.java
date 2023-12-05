@@ -47,8 +47,8 @@ public class ChangePassJFrame extends javax.swing.JFrame {
 			}
 		});
 
-        panelBoder1 = new Component.PanelBoder();
-        menu1 = new Component.Menu();
+        panelBoder1 = new Components.PanelBoder();
+        menu1 = new Components.Menu();
         jLabel1 = new javax.swing.JLabel();
         txtTenTaiKhoan = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
@@ -347,7 +347,8 @@ public class ChangePassJFrame extends javax.swing.JFrame {
         } else {
             Auth.user.setMatKhau(matKhauMoi);
             dao.update(Auth.user);
-            MsgBox.alert(this, "Đăng nhập thành công");
+            MsgBox.alert(this, "Đổi mật khẩu thành công");
+            dispose();
         }
 //        this.dispose();
     }
@@ -364,8 +365,8 @@ public class ChangePassJFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
-    private Component.Menu menu1;
-    private Component.PanelBoder panelBoder1;
+    private Components.Menu menu1;
+    private Components.PanelBoder panelBoder1;
     private javax.swing.JPasswordField txtMatKhau;
     private javax.swing.JPasswordField txtMatKhauMoi;
     private javax.swing.JPasswordField txtMatKhauXacThuc;

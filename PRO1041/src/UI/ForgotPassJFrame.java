@@ -43,12 +43,12 @@ TaiKhoanDAO dao = new TaiKhoanDAO();
 			}
 		});
 
-        panelBoder1 = new Component.PanelBoder();
+        panelBoder1 = new Components.PanelBoder();
         lblTite = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
-        btnDongY = new Component.Button();
+        btnDongY = new Components.Button();
 
 //        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -198,11 +198,11 @@ TaiKhoanDAO dao = new TaiKhoanDAO();
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private Component.Button btnDongY;
+    private Components.Button btnDongY;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblTite;
-    private Component.PanelBoder panelBoder1;
+    private Components.PanelBoder panelBoder1;
     private javax.swing.JTextField txtEmail;
     // End of variables declaration//GEN-END:variables
 }

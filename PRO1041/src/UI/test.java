@@ -1,57 +1,37 @@
 package UI;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.Comparator;
 
 public class test {
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Table Right Click Example");
+        // Tạo JTable và DefaultTableModel
+        DefaultTableModel model = new DefaultTableModel();
+        JTable table = new JTable(model);
+
+        // Thêm dữ liệu vào JTable
+        model.addColumn("Column 1");
+        model.addColumn("Column 2");
+        model.addColumn("Column 3");
+        model.addRow(new Object[]{5, 3, 8});
+        model.addRow(new Object[]{2, 9, 1});
+        model.addRow(new Object[]{7, 6, 4});
+
+        // Tạo JFrame và hiển thị JTable
+        JFrame frame = new JFrame();
+        frame.setLayout(new BorderLayout());
+        frame.add(new JScrollPane(table), BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Tạo một bảng với dữ liệu mẫu
-        String[] columnNames = {"Column 1", "Column 2", "Column 3"};
-        Object[][] data = {
-                {"Data 1", "Data 2", "Data 3"},
-                {"Data 4", "Data 5", "Data 6"},
-                {"Data 7", "Data 8", "Data 9"}
-        };
-        JTable table = new JTable(data, columnNames);
-
-        // Tạo một menu danh sách
-        JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem menuItem = new JMenuItem("Box List");
-        popupMenu.add(menuItem);
-
-        // Xử lý sự kiện nhấp chuột phải trên hàng
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    int row = table.rowAtPoint(e.getPoint());
-                    if (row >= 0 && row < table.getRowCount()) {
-                        table.setRowSelectionInterval(row, row);
-                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
-                    }
-                }
-            }
-        });
-        frame.getContentPane().setLayout(null);
-
-        // Đặt bảng vào trong một thanh cuộn
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 0, 386, 263);
-        frame.getContentPane().add(scrollPane);
-        
-        
-        SpinnerDateModel dateModel = new SpinnerDateModel();
-        JSpinner spinner = new JSpinner(dateModel);
-        spinner.setEditor(new JSpinner.DateEditor(spinner, "dd/MM/yyyy"));
-        spinner.setEnabled(false); // Không cho phép chỉnh sửa
-        spinner.setBounds(100, 100, 100, 35);
-
-        frame.setSize(400, 300);
+        frame.setSize(300, 200);
         frame.setVisible(true);
+
+        // Sắp xếp cột đầu theo thứ tự từ lớn đến bé
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
+        sorter.setComparator(0, Comparator.reverseOrder());
+        sorter.sort();
     }
 }

@@ -15,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -258,24 +260,35 @@ public class PanelPrintBill extends JFrame {
 	        }
 		
 
+
 		 
+//		 ChronoUnit.DAYS.between(NgayHienTaiLocalDate, ngayBatDauLocalDate);
 		 
 		 //lấy số ngày
 		 int soNgay = 0;
 		 if(trangThai.equalsIgnoreCase("Chưa thanh toán")) {
-			 soNgay = new Date(System.currentTimeMillis()).compareTo(ngayBatDau);
+			 LocalDate ngayBatDauLocalDate = ngayBatDau.toLocalDate();
+			 LocalDate NgayHienTaiLocalDate = new Date(System.currentTimeMillis()).toLocalDate();
+			 soNgay = Integer.valueOf((int) ChronoUnit.DAYS.between(ngayBatDauLocalDate, NgayHienTaiLocalDate));
 
 			 if(soNgay==0) {
 				 soNgay=1;
 			 }
 			 
+
+			 
+//			 System.out.println(new Date(System.currentTimeMillis()));
+//			 System.out.println(new Date(System.currentTimeMillis()).compareTo(ngayBatDau));
+//			 System.out.println(ngayBatDau);
+			 
 		 }else if(trangThai.equalsIgnoreCase("Đã hoàn tất")) {
-			 soNgay = ngayKetThuc.compareTo(ngayBatDau);
+			 LocalDate ngayBatDauLocalDate = ngayBatDau.toLocalDate();
+			 LocalDate NgayKetThucLocalDate = ngayKetThuc.toLocalDate();
+			 soNgay = Integer.valueOf((int) ChronoUnit.DAYS.between(ngayBatDauLocalDate, NgayKetThucLocalDate));
 			 
 			 if(soNgay==0) {
 				 soNgay=1;
 			 }
-			
 		 }
 		 
 		 

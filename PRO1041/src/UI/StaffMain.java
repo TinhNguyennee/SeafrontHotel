@@ -128,27 +128,27 @@ public class StaffMain extends JFrame {
 		panelmain.setVisible(true);
 		panel.add(panelmain);
 		
-		panelbooking = new PanelBooking(this);
-		panelbooking.setVisible(false);
-		panel.add(panelbooking);
-		
-		panelcustomer = new PanelCustomer();
-		panelcustomer.setVisible(false);
-		panel.add(panelcustomer);
-		
-		panelbill = new PanelBill();
-		panelbill.setVisible(false);
-		panel.add(panelbill);
-		
-		panelservice = new PanelService();
-		panelservice.setVisible(false);
-		panel.add(panelservice);
+//		panelbooking = new PanelBooking(this);
+//		panelbooking.setVisible(false);
+//		panel.add(panelbooking);
+//		
+//		panelcustomer = new PanelCustomer();
+//		panelcustomer.setVisible(false);
+//		panel.add(panelcustomer);
+//		
+//		panelbill = new PanelBill();
+//		panelbill.setVisible(false);
+//		panel.add(panelbill);
+//		
+//		panelservice = new PanelService();
+//		panelservice.setVisible(false);
+//		panel.add(panelservice);
 		
 //		changepassword = new ChangePassword();
 //		changepassword.setVisible(false);
 		
-		panelcustomerchild = new PanelCustomerChild();
-		panelcustomerchild.setVisible(false);
+//		panelcustomerchild = new PanelCustomerChild();
+//		panelcustomerchild.setVisible(false);
 
 		
 

@@ -1,14 +1,26 @@
 package UI;
 
 import java.awt.Color;
+import java.awt.HeadlessException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+import java.util.Random;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -18,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
 import DAO.NhanVienDAO;
 import Entity.NhanVien;
 import Swing.ScrollBar;
+import Utils.JDBCHelper;
 import Utils.MsgBox;
 import Utils.Validate;
 import Utils.XDate;
@@ -27,6 +40,7 @@ public class PanelStaff extends javax.swing.JPanel {
 	DefaultTableModel tblModel;
 	List<NhanVien> lstNhanVien = new ArrayList<>();
 	int index = 0;
+	Random random = new Random();
 
 	/**
 	 * Creates new form Room
@@ -175,6 +189,61 @@ public class PanelStaff extends javax.swing.JPanel {
 			return false;
 		}
 	}
+	
+	private void sendEmail(NhanVien nv) {
+		int number = random.nextInt(900000) + 100000;
+        final String from = "hoainam.vaau@gmail.com";
+        final String pass = "vbgc dxby zajj ehcs";
+        final String to = nv.getEmail();
+        String tenTaiKhoan = "NV" + nv.getMaNhanVien();
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587"); // TLS 587 SSL 465
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        // Phiên làm việc
+        Session session = Session.getInstance(props, new Authenticator() {
+        	protected PasswordAuthentication getPasswordAuthentication() {
+        		return new PasswordAuthentication(from, pass);
+        	}
+		});
+        // Tạo tin nhắn
+        MimeMessage msg = new MimeMessage(session);
+        try {
+            // Kiểu nội dung
+            msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
+            // Người gửi
+            msg.setFrom(new InternetAddress(from));
+            // Người nhận
+            msg.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(to, false));
+            // Tiêu đề email
+            msg.setSubject("TÀI KHOẢN ĐĂNG NHẬP HỆ THỐNG");
+            // Quy định ngày gửi 
+            msg.setSentDate(new java.util.Date());
+            // Quy định email nhận phản hồi
+//        msg.setReplyTo(InternetAddress.parse(from,false));
+            // Nội dung
+
+            msg.setText("Tên Tài Khoản: " + tenTaiKhoan + "\n" + "Mật Khẩu: " + String.valueOf(number), "UTF-8");
+            // Gửi Email
+            Transport.send(msg);
+            String INSERT_SQL = "INSERT INTO TaiKhoan VALUES (?, ?, ?, ?, ?)";
+            JDBCHelper.update(INSERT_SQL, 
+            		tenTaiKhoan,
+            		String.valueOf(number),
+            		new Date(),
+            		nv.getChucVu(),
+            		nv.getMaNhanVien()
+            		);
+
+            MsgBox.alert(this, "Thêm nhân viên thành công! \nTài khoản và mật khẩu mới vừa được gửi về email của nhân viên!");
+
+        } catch (HeadlessException | MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 
 	private NhanVien readForm() {
 		NhanVien model = new NhanVien();
@@ -227,8 +296,8 @@ public class PanelStaff extends javax.swing.JPanel {
 			lstNhanVien.add(model);
 			modelDAO.insert(model);
 			DBFillToList();
+			sendEmail(model);
 			clearForm();
-			MsgBox.alert(this, "Thêm nhân viên thành công!");
 		}
 	}
 

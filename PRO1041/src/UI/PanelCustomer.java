@@ -30,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import Utils.ConnectDatabase;
 
@@ -238,6 +239,10 @@ public class PanelCustomer extends JPanel {
 		//fill table
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
+		
+	    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+	    table.setRowSorter(sorter);
+		
 		try {
 
 			//			Connection conn = con.getConnection();

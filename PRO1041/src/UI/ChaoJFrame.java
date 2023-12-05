@@ -51,7 +51,7 @@ public class ChaoJFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        menu1 = new Component.Menu();
+        menu1 = new Components.Menu();
         jLabel1 = new javax.swing.JLabel();
         pgbChao = new javax.swing.JProgressBar();
 
@@ -147,7 +147,7 @@ public class ChaoJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private Component.Menu menu1;
+    private Components.Menu menu1;
     private javax.swing.JProgressBar pgbChao;
     // End of variables declaration//GEN-END:variables
 }

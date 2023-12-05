@@ -1,7 +1,5 @@
 package Swing;
 
-import Component.EventMenuSelected;
-import Component.Model_Menu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,6 +9,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
+
+import Components.EventMenuSelected;
+import Components.Model_Menu;
 
 public class ListMenu<E extends Object> extends JList<E> {
 

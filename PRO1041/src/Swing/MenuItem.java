@@ -1,11 +1,12 @@
 package Swing;
 
-import Component.Model_Menu;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+
+import Components.Model_Menu;
 
 public class MenuItem extends javax.swing.JPanel {
 

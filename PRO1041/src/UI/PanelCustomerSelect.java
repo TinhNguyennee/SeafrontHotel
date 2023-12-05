@@ -159,9 +159,15 @@ public class PanelCustomerSelect extends JFrame {
 		//fill table
 		try {
 			Connection conn = con.getConnection();
-			String sql = "SELECT maKhachHang, tenKhachHang, CCCD, soDienThoai, email " +
-					"FROM KhachHang " +
-					"WHERE maKhachHang NOT IN (SELECT maKhachHang FROM DatPhong)";
+			String sql = "SELECT kh.maKhachHang, kh.tenKhachHang, kh.CCCD, kh.soDienThoai, kh.email "
+					+ "FROM KhachHang kh "
+					+ "WHERE EXISTS ( "
+					+ "  SELECT 1 "
+					+ "  FROM DatPhong dp "
+					+ "  JOIN Phong p ON dp.maPhong = p.maPhong "
+					+ "  WHERE dp.maKhachHang = kh.maKhachHang "
+					+ "  AND p.trangThaiPhong LIKE N'Còn trống' "
+					+ ");";
 
 			Statement statement = conn.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
@@ -258,6 +264,8 @@ public class PanelCustomerSelect extends JFrame {
 							pstmt.setInt(2, PanelBooking.getPhong());
 							pstmt.executeUpdate();
 
+							
+							
 							dispose();
 						} catch (SQLException ex) {
 							ex.printStackTrace();

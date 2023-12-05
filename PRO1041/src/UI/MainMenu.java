@@ -180,7 +180,8 @@ public class MainMenu extends JPanel {
         		lbbtDoiMatKhau.setOpaque(false);
         		lbbtDoiMatKhau.setBackground(null);
         		
-        		PanelService panelservice = new PanelService();
+        		int maDatPhongTuBooking = 0;
+        		PanelService panelservice = new PanelService(maDatPhongTuBooking);
         		
         		main.setPanelservice(panelservice);
         		
@@ -283,6 +284,17 @@ public class MainMenu extends JPanel {
         		changepassjframe.setVisible(true);
         	}
         });
+        
+        lbbtDangXuat.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+
+        		main.dispose();
+        		LoginFrame loginframe = new LoginFrame();
+        		loginframe.setVisible(true);
+
+        	}
+		});
         
 
 		

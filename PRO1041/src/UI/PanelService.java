@@ -31,6 +31,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import Utils.ConnectDatabase;
 
@@ -46,7 +47,7 @@ public class PanelService extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public PanelService() {
+	public PanelService(int maDatPhongTuBooking) {
 
 		Utils.ConnectDatabase con = new ConnectDatabase();
 
@@ -331,12 +332,16 @@ public class PanelService extends JPanel {
 					"FROM DatPhong dp " +
 					"JOIN Phong p ON dp.maPhong = p.maPhong " +
 					"JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
-					"JOIN NhanVien nv ON dp.maNhanVien = nv.maNhanVien";
+					"JOIN NhanVien nv ON dp.maNhanVien = nv.maNhanVien " +
+					"ORDER BY dp.maDatPhong DESC";
 			ResultSet resultSet = statement.executeQuery(query);
 
 			// Tạo mô hình bảng
 			DefaultTableModel model = (DefaultTableModel) table_1.getModel();
 			model.setRowCount(0);
+			
+		    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+		    table_1.setRowSorter(sorter);
 
 			// Đổ dữ liệu từ ResultSet vào mô hình bảng
 			while (resultSet.next()) {
@@ -400,6 +405,10 @@ public class PanelService extends JPanel {
 							ResultSet resultSet = statement.executeQuery();
 							DefaultTableModel model = (DefaultTableModel) table.getModel();
 							model.setRowCount(0);
+							
+						    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+						    table.setRowSorter(sorter);
+							
 							// In kết quả truy vấn
 							while(resultSet.next()) {
 
@@ -538,6 +547,8 @@ public class PanelService extends JPanel {
 
 		    }
 		});
+		
+		txtMaDatPhong.setText(String.valueOf(maDatPhongTuBooking));
 
 
 

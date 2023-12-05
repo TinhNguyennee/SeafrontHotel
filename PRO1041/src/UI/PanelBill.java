@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import Utils.ConnectDatabase;
 
@@ -111,6 +112,9 @@ public class PanelBill extends JPanel {
 			// Tạo DefaultTableModel và định nghĩa các cột
 			DefaultTableModel model = (DefaultTableModel) table.getModel();
 			model.setRowCount(0);
+			
+		    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+		    table.setRowSorter(sorter);
 
 			// Đổ dữ liệu từ ResultSet vào DefaultTableModel
 			while (resultSet.next()) {
