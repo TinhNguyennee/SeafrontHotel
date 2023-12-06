@@ -118,13 +118,8 @@ public class PanelService extends JPanel {
 
 		JButton btThemDichVu = new JButton("Thêm");
 		btThemDichVu.setFont(new Font("Arial", Font.BOLD, 16));
-		btThemDichVu.setBounds(158, 240, 92, 31);
+		btThemDichVu.setBounds(233, 240, 92, 31);
 		add(btThemDichVu);
-
-		JButton btSuaDichVu = new JButton("Sửa");
-		btSuaDichVu.setFont(new Font("Arial", Font.BOLD, 16));
-		btSuaDichVu.setBounds(283, 240, 92, 31);
-		add(btSuaDichVu);
 
 		JLabel lbTimMaDichVu = new JLabel("Mã Dịch Vụ");
 		lbTimMaDichVu.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -245,7 +240,7 @@ public class PanelService extends JPanel {
 
 		JButton btXoaDichVu = new JButton("Xóa");
 		btXoaDichVu.setFont(new Font("Arial", Font.BOLD, 16));
-		btXoaDichVu.setBounds(409, 240, 92, 31);
+		btXoaDichVu.setBounds(349, 240, 92, 31);
 		add(btXoaDichVu);
 
 		JComboBox cbbDichVu = new JComboBox();

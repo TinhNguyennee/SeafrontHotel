@@ -46,7 +46,7 @@ public class ChangePassJFrame extends javax.swing.JFrame {
 				dispose();
 			}
 		});
-
+		setUndecorated(true);
         panelBoder1 = new Components.PanelBoder();
         menu1 = new Components.Menu();
         jLabel1 = new javax.swing.JLabel();

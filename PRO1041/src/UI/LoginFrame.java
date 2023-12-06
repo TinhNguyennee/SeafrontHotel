@@ -52,6 +52,7 @@ public class LoginFrame extends javax.swing.JFrame {
 	// Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
 
+		setUndecorated(true);
 		panelBoder1 = new Components.PanelBoder();
 		menu1 = new Components.Menu();
 		jLabel1 = new javax.swing.JLabel();

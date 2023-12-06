@@ -550,6 +550,281 @@ public class PanelBooking extends JPanel {
 		
 		
 		
+		
+		//ấn nút sửa
+		btSuaPhong.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+				
+				
+				int selectedRow = table_1.getSelectedRow();
+		        int maDatPhong = 0;
+		        java.util.Date ngayO;
+		        
+		        
+		        		//kiểm tra có chọn đặt phòng chưa
+			        	if (selectedRow == -1) {
+				            Utils.MsgBox.error(null, "Bạn chưa chọn đặt phòng để sửa");
+				            return;
+			        	}
+		        	
+		        	
+		        	
+			            maDatPhong = (int) table_1.getValueAt(selectedRow, 0);
+			            ngayO = (java.util.Date) table_1.getValueAt(selectedRow, 4);
+			            String trangThai = table_1.getValueAt(selectedRow, 6).toString();
+			            
+			            
+			            
+			            
+			    		//kiểm tra đã thanh toán chưa
+			    		if(trangThai.equalsIgnoreCase("Đã hoàn tất")) {
+				    		Utils.MsgBox.error(null, "Phòng này đã được thanh toán");
+				    		return;
+			    		}
+			    		
+			    		
+			    		
+						// Lấy ngày ở từ spinner
+						java.util.Date ngayO1 = (java.util.Date) spinnerNgayO.getValue();
+
+						// Lấy ngày hiện tại
+						java.util.Date ngayHienTai = new java.util.Date();
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(ngayHienTai);
+						calendar.add(Calendar.DAY_OF_YEAR, -1);
+
+						java.util.Date ngayTruocDo = calendar.getTime();
+						
+						Calendar calendar1 = Calendar.getInstance();
+						calendar1.setTime(ngayHienTai);
+						calendar1.add(Calendar.DAY_OF_YEAR, +1);
+
+						java.util.Date ngaySauDo = calendar.getTime();
+			    		
+						//kiểm tra ngày ở
+						if (ngayO1.before(ngayTruocDo)) {
+							Utils.MsgBox.error(null, "Ngày ở không hợp lệ!");
+							return;
+						}
+						
+						if (ngayO.before(ngaySauDo)) {
+							Utils.MsgBox.error(null, "Phòng này đang trong thời gian ở, không thể sửa ngày ở.");
+							return;
+						}
+						
+						
+					
+			    		
+						
+						
+						
+						
+						String trangThaiPhong = null;
+						try {
+							Connection conn = con.getConnection();
+
+							// Chuẩn bị câu truy vấn PreparedStatement
+							String query = "SELECT trangThaiPhong FROM Phong WHERE tenPhong = ?";
+							PreparedStatement pstmt = conn.prepareStatement(query);
+							pstmt.setNString(1, String.valueOf(cbbPhong.getSelectedItem()));
+
+							// Thực thi câu truy vấn
+							ResultSet rs = pstmt.executeQuery();
+
+							rs.next();
+							trangThaiPhong = rs.getString("trangThaiPhong");
+
+
+							rs.close();
+							pstmt.close();
+							conn.close();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+
+
+
+						
+						
+						
+						//lấy mã phòng cũ
+						int maPhongCu = 0;
+				        try {
+							Connection conn = con.getConnection();
+							
+				            String sql = "SELECT maPhong FROM DatPhong where madatphong = "+maDatPhong;
+				            Statement statement = conn.createStatement();
+				            ResultSet resultSet = statement.executeQuery(sql);
+
+				            if (resultSet.next()) {
+				                maPhongCu = resultSet.getInt("maPhong");
+				            }
+				        } catch (SQLException e1) {
+				            e1.printStackTrace();
+				        }
+				        
+				        
+
+				        
+				        
+				        
+				        
+				        
+				        
+				        
+				        
+				        //lấy thông tin trên form
+				        int maNhanVien = 0;
+						try {
+							Connection conn = con.getConnection();
+							Statement stm = conn.createStatement();
+							String query = "SELECT manhanvien from nhanvien where tennhanvien like N'"+(String) cbbNguoiLap.getSelectedItem()+"'";
+							ResultSet resultSet = stm.executeQuery(query);
+							resultSet.next();
+							maNhanVien = resultSet.getInt("manhanvien");
+						}catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+
+						int maPhongMoi = 0;
+						try {
+							Connection conn = con.getConnection();
+
+							Statement stm = conn.createStatement();
+							String query = "SELECT maphong from phong where tenphong like N'"+(String) cbbPhong.getSelectedItem()+"'";
+							ResultSet resultSet = stm.executeQuery(query);
+							resultSet.next();
+							maPhongMoi = resultSet.getInt("maphong");
+						}catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+
+
+						java.util.Date utilDate = (java.util.Date) spinnerNgayO.getValue();
+						java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+						Date ngayOMoi = sqlDate;
+
+						java.util.Date utilDate2 = (java.util.Date) spinnerNgayTra.getValue();
+						java.sql.Date sqlDate2 = new java.sql.Date(utilDate2.getTime());
+
+						Date ngayTraMoi = sqlDate2;
+						
+						
+						
+						
+						
+						
+						// Kiểm tra phòng còn trống?
+						if(!trangThaiPhong.equalsIgnoreCase("Còn trống")&&!(maPhongCu==maPhongMoi)) {
+							Utils.MsgBox.error(null, "Phòng này đã được đặt trước");
+							return;
+						}
+						
+						
+						
+						
+						
+						
+						
+						
+						
+				        //cập nhật trạng thái cho phòng cũ
+				        try {
+							
+				        	Connection conn = con.getConnection();
+				        	String sql = "UPDATE Phong SET trangthaiphong = ? WHERE maPhong = ?";
+				            PreparedStatement statement = conn.prepareStatement(sql);
+
+				            // Cung cấp giá trị cho các tham số trong câu lệnh UPDATE
+				            statement.setNString(1, "Còn trống"); 
+				            statement.setInt(2, maPhongCu); 
+
+				            statement.executeUpdate();
+				        	
+				        	
+				        	
+						} catch (Exception e2) {
+							// TODO: handle exception
+						}
+				        
+				        
+				        
+				        
+				        
+				        
+				        
+				        //sửa thông tin đặt phòng
+				        try {
+				        	
+				        	
+							
+				        	Connection conn = con.getConnection();
+				        	 String sql = "UPDATE DatPhong SET manhanvien = ?, maphong = ?, ngaybatdau = ?, ngayketthuc = ? WHERE maDatPhong = ?";
+				             PreparedStatement statement = conn.prepareStatement(sql);
+
+				             // Cung cấp giá trị cho các tham số trong câu lệnh UPDATE
+				             statement.setInt(1, maNhanVien);
+				             statement.setInt(2, maPhongMoi); 
+				             statement.setDate(3, ngayOMoi); 
+				             statement.setDate(4, ngayTraMoi); 
+				             statement.setInt(5, maDatPhong); 
+
+				             statement.executeUpdate();
+
+				        	
+				        	
+				        	
+						} catch (Exception e2) {
+							// TODO: handle exception
+						}
+				        
+				        
+				        
+				        
+				        //cập nhật trạng thái cho phòng mới
+				        try {
+							
+				        	Connection conn = con.getConnection();
+				        	String sql = "UPDATE Phong SET trangthaiphong = ? WHERE maPhong = ?";
+				            PreparedStatement statement = conn.prepareStatement(sql);
+
+				            // Cung cấp giá trị cho các tham số trong câu lệnh UPDATE
+				            statement.setNString(1, "Đã đặt"); 
+				            statement.setInt(2, maPhongMoi);
+
+				            statement.executeUpdate();
+				        	
+				        	
+				        	
+						} catch (Exception e2) {
+							// TODO: handle exception
+						}
+				        
+						
+				
+				
+				Utils.MsgBox.alert(null, "Sửa thành công");
+				
+				
+				
+			}
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		//ấn nút in
 		btIn.addActionListener(new ActionListener() {
 

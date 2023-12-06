@@ -50,6 +50,7 @@ public class ChaoJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+    	setUndecorated(true);
         jPanel1 = new javax.swing.JPanel();
         menu1 = new Components.Menu();
         jLabel1 = new javax.swing.JLabel();
