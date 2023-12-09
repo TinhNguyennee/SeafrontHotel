@@ -52,7 +52,7 @@ public class PanelInvoice extends javax.swing.JPanel {
 
 	}
     
-    private void fillTableHoaDonTheoMa(int id) {
+    private void fillTableHoaDonTheoMa(String id) {
 		DefaultTableModel tblModel = (DefaultTableModel) table.getModel();
 		tblModel.setRowCount(0);
 		try {
@@ -92,7 +92,7 @@ public class PanelInvoice extends javax.swing.JPanel {
             	try {
             		String timKiem = txtTimKiem.getText();
                 	if (timKiem.trim().length() != 0) {
-                		fillTableHoaDonTheoMa(Integer.parseInt(timKiem));
+                		fillTableHoaDonTheoMa(timKiem);
                 	} else {
                 		fillTableHoaDon();
                 	}

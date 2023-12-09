@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -20,7 +22,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
@@ -51,6 +52,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import DAO.HoaDonDAO;
 import Utils.ConnectDatabase;
 
 public class PanelBooking extends JPanel {
@@ -60,6 +62,15 @@ public class PanelBooking extends JPanel {
 	private JTable table;
 	private JTable table_1;
 	private JTextField txtTimMaDatPhong;
+	private JTabbedPane tabbedPane;
+
+	public JTabbedPane getTabbedPane() {
+		return tabbedPane;
+	}
+	public void setTabbedPane(JTabbedPane tabbedPane) {
+		this.tabbedPane = tabbedPane;
+	}
+
 
 	private static int nguoiLap;
 	private static int phong;
@@ -241,7 +252,7 @@ public class PanelBooking extends JPanel {
 
 
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(10, 325, 645, 214);
 		add(tabbedPane);
 
@@ -448,7 +459,7 @@ public class PanelBooking extends JPanel {
 
 					if(Utils.MsgBox.comfirm(null, "Bạn đã có khách hàng?")) {
 						
-						PanelCustomerSelect panelcustomerselect = new PanelCustomerSelect();
+						PanelCustomerSelect panelcustomerselect = new PanelCustomerSelect(main);
 						panelcustomerselect.setVisible(true);
 						
 						Connection conn = con.getConnection();
@@ -496,7 +507,7 @@ public class PanelBooking extends JPanel {
 						// Ngày ở hợp lệ, thực hiện hành động khác ở đây
 						
 						
-						PanelCustomerChild panelcustomerchild = new PanelCustomerChild();
+						PanelCustomerChild panelcustomerchild = new PanelCustomerChild(main);
 						panelcustomerchild.setVisible(true);
 
 
@@ -808,8 +819,13 @@ public class PanelBooking extends JPanel {
 				        
 						
 				
+				     
+				        
 				
 				Utils.MsgBox.alert(null, "Sửa thành công");
+				
+				
+				filltable_1();
 				
 				
 				
@@ -866,7 +882,7 @@ public class PanelBooking extends JPanel {
 		
 		
 		
-		//ấn vào nút hủy
+		//ấn nút hủy
 		btHuyPhong.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
@@ -941,6 +957,7 @@ public class PanelBooking extends JPanel {
 				            PreparedStatement statement = conn.prepareStatement(deleteQuery);
 				            statement.executeUpdate();
 				            Utils.MsgBox.alert(null, "Đã hủy thành công");
+				            filltable_1();
 			        	    statement.close();
 						} catch (Exception e2) {
 							// TODO: handle exception
@@ -990,7 +1007,7 @@ public class PanelBooking extends JPanel {
 		            if (ngayHienTai.before(ngayO)) {
 		                Utils.MsgBox.alert(null, "Đặt trước không thể thanh toán");
 		            } else {
-		                PanelPay panelpay = new PanelPay(maDatPhong);
+		                PanelPay panelpay = new PanelPay(maDatPhong, main);
 		                panelpay.setVisible(true);
 		            }
 
@@ -1039,58 +1056,12 @@ public class PanelBooking extends JPanel {
 
 
 
-		// Truy vấn dữ liệu từ các bảng
-		try {
-			Connection conn = con.getConnection();
-			Statement statement = conn.createStatement();
-			String query = "SELECT dp.maDatPhong, p.tenPhong, lp.tenLoaiPhong, nv.tenNhanVien, dp.ngayBatDau, dp.ngayKetThuc, dp.trangThai " +
-					"FROM DatPhong dp " +
-					"JOIN Phong p ON dp.maPhong = p.maPhong " +
-					"JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
-					"JOIN NhanVien nv ON dp.maNhanVien = nv.maNhanVien " +
-					"ORDER BY dp.maDatPhong DESC";
-			ResultSet resultSet = statement.executeQuery(query);
-
-			// Tạo mô hình bảng
-			DefaultTableModel model = (DefaultTableModel) table_1.getModel();
-			model.setRowCount(0);
-			
-		    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-		    table_1.setRowSorter(sorter);
-		    
-
-		    
-
-			// Đổ dữ liệu từ ResultSet vào mô hình bảng
-			while (resultSet.next()) {
-				int maDatPhong = resultSet.getInt("maDatPhong");
-				String tenPhong = resultSet.getString("tenPhong");
-				String tenLoaiPhong = resultSet.getString("tenLoaiPhong");
-				String tenNhanVien = resultSet.getString("tenNhanVien");
-				Date ngayO1 = resultSet.getDate("ngayBatDau");
-				Date ngayTra1 = resultSet.getDate("ngayKetThuc");
-				String trangThai = resultSet.getString("trangThai");
-
-				Vector<Object> row = new Vector<>();
-				row.add(maDatPhong);
-				row.add(tenPhong);
-				row.add(tenLoaiPhong);
-				row.add(tenNhanVien);
-				row.add(ngayO1);
-				row.add(ngayTra1);
-				row.add(trangThai);
-				model.addRow(row);
-			}
-
-			// Đóng ResultSet và Statement
-			resultSet.close();
-			statement.close();
-
-			// Đóng kết nối
-			conn.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		// fill table_1
+		filltable_1();
+		
+		
+		
+		
 
 
 
@@ -1331,7 +1302,7 @@ public class PanelBooking extends JPanel {
 		            if (ngayHienTai.before(ngayO)) {
 		                Utils.MsgBox.alert(null, "Đặt trước không thể thanh toán");
 		            } else {
-		                PanelPay panelpay = new PanelPay(maDatPhong);
+		                PanelPay panelpay = new PanelPay(maDatPhong, main);
 		                panelpay.setVisible(true);
 		            }
 
@@ -1461,9 +1432,123 @@ public class PanelBooking extends JPanel {
 		});
 
 
-//System.out.println(table_1.getValueAt(1, 6));
+		txtTimMaDatPhong.addKeyListener((KeyListener) new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent event) {
+            	
+            }
+            @Override
+            public void keyReleased(KeyEvent event) {
+            	try {
+            		String timKiem = txtTimMaDatPhong.getText();
+                	if (timKiem.trim().length() != 0) {
+                		fillTableDatPhongTheoMa(timKiem);
+                	} else {
+                		fillTableDatPhong();
+                	}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+            }
+            @Override
+            public void keyPressed(KeyEvent event) {
+//                System.out.println("key pressed");
+            }
+        });
 
 	}
+	
+	
+	
+	private void filltable_1() {
+		Utils.ConnectDatabase con = new ConnectDatabase();
+		try {
+			Connection conn = con.getConnection();
+			Statement statement = conn.createStatement();
+			String query = "SELECT dp.maDatPhong, p.tenPhong, lp.tenLoaiPhong, nv.tenNhanVien, dp.ngayBatDau, dp.ngayKetThuc, dp.trangThai " +
+					"FROM DatPhong dp " +
+					"JOIN Phong p ON dp.maPhong = p.maPhong " +
+					"JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
+					"JOIN NhanVien nv ON dp.maNhanVien = nv.maNhanVien " +
+					"ORDER BY dp.maDatPhong DESC";
+			ResultSet resultSet = statement.executeQuery(query);
+
+			// Tạo mô hình bảng
+			DefaultTableModel model = (DefaultTableModel) table_1.getModel();
+			model.setRowCount(0);
+			
+		    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+		    table_1.setRowSorter(sorter);
+		    
+
+		    
+
+			// Đổ dữ liệu từ ResultSet vào mô hình bảng
+			while (resultSet.next()) {
+				int maDatPhong = resultSet.getInt("maDatPhong");
+				String tenPhong = resultSet.getString("tenPhong");
+				String tenLoaiPhong = resultSet.getString("tenLoaiPhong");
+				String tenNhanVien = resultSet.getString("tenNhanVien");
+				Date ngayO1 = resultSet.getDate("ngayBatDau");
+				Date ngayTra1 = resultSet.getDate("ngayKetThuc");
+				String trangThai = resultSet.getString("trangThai");
+
+				Vector<Object> row = new Vector<>();
+				row.add(maDatPhong);
+				row.add(tenPhong);
+				row.add(tenLoaiPhong);
+				row.add(tenNhanVien);
+				row.add(ngayO1);
+				row.add(ngayTra1);
+				row.add(trangThai);
+				model.addRow(row);
+			}
+
+			// Đóng ResultSet và Statement
+			resultSet.close();
+			statement.close();
+
+			// Đóng kết nối
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
+	private void fillTableDatPhongTheoMa(String id) {
+		DefaultTableModel tblModel = (DefaultTableModel) table_1.getModel();
+		tblModel.setRowCount(0);
+		try {
+			List<Object[]> lst = new HoaDonDAO().getThongTinDatPhongTheoMa(id);
+
+			for (Object[] objects : lst) {
+				tblModel.addRow(objects);
+			}
+		} catch (Exception e) {
+		}
+	}
+	
+	
+	private void fillTableDatPhong() {
+		DefaultTableModel tblModel = (DefaultTableModel) table_1.getModel();
+		tblModel.setRowCount(0);
+		try {
+			List<Object[]> lst = new HoaDonDAO().getThongTinDatPhong();
+
+			for (Object[] objects : lst) {
+				tblModel.addRow(objects);
+			}
+		} catch (Exception e) {
+		}
+
+	}
+	
+	
+	
+	
 	private void fillTenLoaiPhong(String selectedPhong) {
 		try {
 			Utils.ConnectDatabase con = new ConnectDatabase();

@@ -58,7 +58,8 @@ public class PanelCustomerSelect extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PanelCustomerSelect frame = new PanelCustomerSelect();
+					StaffMain main = new StaffMain();
+					PanelCustomerSelect frame = new PanelCustomerSelect(main);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -70,7 +71,7 @@ public class PanelCustomerSelect extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public PanelCustomerSelect() {
+	public PanelCustomerSelect(StaffMain main) {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -264,7 +265,17 @@ public class PanelCustomerSelect extends JFrame {
 							pstmt.setInt(2, PanelBooking.getPhong());
 							pstmt.executeUpdate();
 
-							
+							PanelBooking panelbooking = new PanelBooking(main);
+
+							main.setPanelbooking(panelbooking);
+
+							main.getPanel().removeAll();
+							main.getPanel().add(main.getPanelbooking());
+							main.getPanelbooking().setVisible(true);
+							main.getPanel().revalidate();
+							main.getPanel().repaint();
+
+							main.getPanelbooking().getTabbedPane().setSelectedIndex(1);
 							
 							dispose();
 						} catch (SQLException ex) {

@@ -20,23 +20,23 @@ public class JDBCHelper {
 
     private static String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
-    private static String userName = "NHOM4";
-    private static String userPassword = "123456";
-    private static String databaseName = "SeafrontHotel";
-    private static String connectionURL = "jdbc:sqlserver://DoanThanhBut\\DOANTHANHBUT:1433; databaseName ="
-            + databaseName
-            + ";user=" + userName
-            + ";password=" + userPassword
-            + ";encrypt=true;trustServerCertificate=true";
-    
-//    private static String userName = "sa";
-//    private static String userPassword = "12345";
+//    private static String userName = "NHOM4";
+//    private static String userPassword = "123456";
 //    private static String databaseName = "SeafrontHotel";
-//    private static String connectionURL = "jdbc:sqlserver://localhost:1433; databaseName ="
+//    private static String connectionURL = "jdbc:sqlserver://DoanThanhBut\\DOANTHANHBUT:1433; databaseName ="
 //            + databaseName
 //            + ";user=" + userName
 //            + ";password=" + userPassword
 //            + ";encrypt=true;trustServerCertificate=true";
+    
+    private static String userName = "sa";
+    private static String userPassword = "12345";
+    private static String databaseName = "SeafrontHotel";
+    private static String connectionURL = "jdbc:sqlserver://localhost:1433; databaseName ="
+            + databaseName
+            + ";user=" + userName
+            + ";password=" + userPassword
+            + ";encrypt=true;trustServerCertificate=true";
 
     static {
         try {

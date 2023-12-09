@@ -57,7 +57,11 @@ public class PanelStatistical extends javax.swing.JPanel {
 		for (Integer year : lst) {
 			model.addElement(year);
 		}
-		cbx.setSelectedIndex(0);
+		if (cbx.getSelectedIndex() == -1) {
+			
+		} else {
+			cbx.setSelectedIndex(0);
+		}
 	}
 
 	private void fillTableDoanhThu() {

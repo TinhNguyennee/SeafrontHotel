@@ -156,6 +156,7 @@ public class MainMenu extends JPanel {
         		main.getPanel().revalidate();
         		main.getPanel().repaint();
         		
+        		main.getPanelbooking().getTabbedPane().setSelectedIndex(1);
         		
 //                main.getPanelmain().setVisible(false);
 //                main.getPanelbooking().setVisible(true);
@@ -190,6 +191,8 @@ public class MainMenu extends JPanel {
         		main.getPanelservice().setVisible(true);
         		main.getPanel().revalidate();
         		main.getPanel().repaint();
+        		
+        		main.getPanelservice().getTabbedPane().setSelectedIndex(1);
         		
 //                main.getPanelmain().setVisible(false);
 //                main.getPanelbooking().setVisible(false);

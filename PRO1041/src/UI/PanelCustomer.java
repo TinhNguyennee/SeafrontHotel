@@ -6,12 +6,15 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -32,6 +35,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import DAO.HoaDonDAO;
 import Utils.ConnectDatabase;
 
 public class PanelCustomer extends JPanel {
@@ -40,6 +44,7 @@ public class PanelCustomer extends JPanel {
 	private JTextField txtHoVaTen;
 	private JTextField txtCCCD;
 	private JTextField txtTimKhachHang;
+	private JTable table;
 
 	/**
 	 * Create the panel.
@@ -124,7 +129,7 @@ public class PanelCustomer extends JPanel {
 		btSuaKhach.setBounds(283, 260, 92, 31);
 		add(btSuaKhach);
 
-		JLabel lbTimKhachHang = new JLabel("Mã Khách Hàng");
+		JLabel lbTimKhachHang = new JLabel("Tên Khách Hàng");
 		lbTimKhachHang.setFont(new Font("Arial", Font.PLAIN, 16));
 		lbTimKhachHang.setBounds(10, 297, 126, 25);
 		add(lbTimKhachHang);
@@ -139,7 +144,7 @@ public class PanelCustomer extends JPanel {
 		btTim.setBounds(575, 297, 80, 25);
 		add(btTim);
 
-		JTable table = new JTable(new DefaultTableModel(
+		table = new JTable(new DefaultTableModel(
 				new Object[][] {
 				},
 				new String[] {
@@ -237,43 +242,14 @@ public class PanelCustomer extends JPanel {
 
 
 		//fill table
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		model.setRowCount(0);
+		filltable();
 		
-	    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-	    table.setRowSorter(sorter);
 		
-		try {
-
-			//			Connection conn = con.getConnection();
-			String query1 = "SELECT maKhachHang, tenKhachHang, CCCD, soDienThoai, email, gioiTinh, ngaySinh, quocTich FROM KhachHang";
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query1);
-
-			while (rs.next()) {
-				int maKhachHang = rs.getInt("maKhachHang");
-				String tenKhachHang = rs.getString("tenKhachHang");
-				String CCCD = rs.getString("CCCD");
-				String soDienThoai = rs.getString("soDienThoai");
-				String email = rs.getString("email");
-				boolean gioiTinh = rs.getBoolean("gioiTinh");
-				Date ngaySinh = rs.getDate("ngaySinh");
-				String quocTich = rs.getString("quocTich");
-
-
-				Vector<Object> row = new Vector<>();
-				row.add(maKhachHang);
-				row.add(tenKhachHang);
-				row.add(CCCD);
-				row.add(soDienThoai);
-				row.add(email);
-				row.add(gioiTinh ? "Nam" : "Nữ");
-				row.add(ngaySinh);
-				row.add(quocTich);
-				model.addRow(row);
-			}
-
-
+		
+		
+		
+		
+		
 
 
 			//fill các text khi ấn vào row
@@ -340,9 +316,6 @@ public class PanelCustomer extends JPanel {
 
 
 
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 
 
 
@@ -364,7 +337,7 @@ public class PanelCustomer extends JPanel {
 
 
 
-		//ấn vào nút thêm
+		//ấn nút thêm
 		btThemKhach.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Lấy dữ liệu từ các thành phần GUI
@@ -431,6 +404,7 @@ public class PanelCustomer extends JPanel {
 							maKhachHang = generatedKeys.getInt(1);
 						}
 						Utils.MsgBox.alert(null, "Thêm thành công");
+						filltable();
 					}
 
 
@@ -460,7 +434,7 @@ public class PanelCustomer extends JPanel {
 
 
 
-		
+		//ấn nút sửa
 		btSuaKhach.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
@@ -616,7 +590,7 @@ public class PanelCustomer extends JPanel {
 		                }
 		                
 		                
-		                
+		                filltable();
 		                
 		                
 		                
@@ -713,7 +687,7 @@ public class PanelCustomer extends JPanel {
 			            
 						
 			    		Utils.MsgBox.alert(null, "Xóa thành công");
-						
+						filltable();
 					}
 					
 					
@@ -735,11 +709,108 @@ public class PanelCustomer extends JPanel {
 		
 		
 		
-		
+		txtTimKhachHang.addKeyListener((KeyListener) new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent event) {
+            	
+            }
+            @Override
+            public void keyReleased(KeyEvent event) {
+            	try {
+            		String timKiem = txtTimKhachHang.getText();
+                	if (timKiem.trim().length() != 0) {
+                		fillTableKhachHangTheoTen(timKiem);
+                	} else {
+                		fillTableKhachHang();
+                	}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+            }
+            @Override
+            public void keyPressed(KeyEvent event) {
+//                System.out.println("key pressed");
+            }
+        });
 
 
 
 
 
 	}
+	
+	private void filltable() {
+		Utils.ConnectDatabase con = new ConnectDatabase();
+		Connection conn = con.getConnection();
+		
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0);
+		
+	    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+	    table.setRowSorter(sorter);
+		
+		try {
+
+			String query1 = "SELECT maKhachHang, tenKhachHang, CCCD, soDienThoai, email, gioiTinh, ngaySinh, quocTich FROM KhachHang ORDER BY makhachhang DESC";
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query1);
+
+			while (rs.next()) {
+				int maKhachHang = rs.getInt("maKhachHang");
+				String tenKhachHang = rs.getString("tenKhachHang");
+				String CCCD = rs.getString("CCCD");
+				String soDienThoai = rs.getString("soDienThoai");
+				String email = rs.getString("email");
+				boolean gioiTinh = rs.getBoolean("gioiTinh");
+				Date ngaySinh = rs.getDate("ngaySinh");
+				String quocTich = rs.getString("quocTich");
+
+
+				Vector<Object> row = new Vector<>();
+				row.add(maKhachHang);
+				row.add(tenKhachHang);
+				row.add(CCCD);
+				row.add(soDienThoai);
+				row.add(email);
+				row.add(gioiTinh ? "Nam" : "Nữ");
+				row.add(ngaySinh);
+				row.add(quocTich);
+				model.addRow(row);
+			}
+
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	private void fillTableKhachHang() {
+		DefaultTableModel tblModel = (DefaultTableModel) table.getModel();
+		tblModel.setRowCount(0);
+		try {
+			List<Object[]> lst = new HoaDonDAO().getThongTinKhachHang();
+
+			for (Object[] objects : lst) {
+				tblModel.addRow(objects);
+			}
+		} catch (Exception e) {
+		}
+
+	}
+    
+    private void fillTableKhachHangTheoTen(String id) {
+		DefaultTableModel tblModel = (DefaultTableModel) table.getModel();
+		tblModel.setRowCount(0);
+		try {
+			List<Object[]> lst = new HoaDonDAO().getThongTinKhachHangTheoTen(id);
+
+			for (Object[] objects : lst) {
+				tblModel.addRow(objects);
+			}
+		} catch (Exception e) {
+		}
+
+	}
+	
+	
 }

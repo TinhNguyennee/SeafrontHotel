@@ -62,7 +62,8 @@ public class PanelPay extends JFrame {
 			public void run() {
 				try {
 					int maDatPhong = 0;
-					PanelPay frame = new PanelPay(maDatPhong);
+					StaffMain main = new StaffMain();
+					PanelPay frame = new PanelPay(maDatPhong, main);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -79,7 +80,7 @@ public class PanelPay extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public PanelPay(int maDatPhong) {
+	public PanelPay(int maDatPhong, StaffMain main) {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -613,6 +614,18 @@ public class PanelPay extends JFrame {
 				    // Xử lý ngoại lệ
 					System.out.println("hellow");
 				}
+				
+				PanelBooking panelbooking = new PanelBooking(main);
+
+				main.setPanelbooking(panelbooking);
+
+				main.getPanel().removeAll();
+				main.getPanel().add(main.getPanelbooking());
+				main.getPanelbooking().setVisible(true);
+				main.getPanel().revalidate();
+				main.getPanel().repaint();
+
+				main.getPanelbooking().getTabbedPane().setSelectedIndex(1);
 				
 				dispose();
 

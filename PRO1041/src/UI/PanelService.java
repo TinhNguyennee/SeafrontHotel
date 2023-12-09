@@ -6,12 +6,15 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -33,16 +36,26 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import DAO.HoaDonDAO;
 import Utils.ConnectDatabase;
 
 public class PanelService extends JPanel {
 	private JTextField txtDonGia;
 	private JTextField txtMaDatPhong;
 	private JTextField txtTenPhong;
-	private JTextField txtTimMaDichVu;
+	private JTextField txtTimMaDatPhong;
 	private JTable table;
 	private JTable table_1;
 	private JTextField txtLoaiPhong;
+	private JTabbedPane tabbedPane;
+
+	public JTabbedPane getTabbedPane() {
+		return tabbedPane;
+	}
+
+	public void setTabbedPane(JTabbedPane tabbedPane) {
+		this.tabbedPane = tabbedPane;
+	}
 
 	/**
 	 * Create the panel.
@@ -121,21 +134,21 @@ public class PanelService extends JPanel {
 		btThemDichVu.setBounds(233, 240, 92, 31);
 		add(btThemDichVu);
 
-		JLabel lbTimMaDichVu = new JLabel("Mã Dịch Vụ");
-		lbTimMaDichVu.setFont(new Font("Arial", Font.PLAIN, 16));
-		lbTimMaDichVu.setBounds(10, 297, 111, 25);
-		add(lbTimMaDichVu);
+		JLabel lbTimMaDatPhong = new JLabel("Mã Đặt Phòng");
+		lbTimMaDatPhong.setFont(new Font("Arial", Font.PLAIN, 16));
+		lbTimMaDatPhong.setBounds(10, 297, 111, 25);
+		add(lbTimMaDatPhong);
 
-		txtTimMaDichVu = new JTextField();
-		txtTimMaDichVu.setColumns(10);
-		txtTimMaDichVu.setBounds(120, 302, 445, 20);
-		add(txtTimMaDichVu);
+		txtTimMaDatPhong = new JTextField();
+		txtTimMaDatPhong.setColumns(10);
+		txtTimMaDatPhong.setBounds(120, 302, 445, 20);
+		add(txtTimMaDatPhong);
 
 		JButton btTim = new JButton("Tìm");
 		btTim.setFont(new Font("Arial", Font.BOLD, 16));
 		btTim.setBounds(575, 297, 80, 25);
 		add(btTim);
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(10, 325, 645, 214);
 		add(tabbedPane);
 
@@ -334,29 +347,36 @@ public class PanelService extends JPanel {
 			// Tạo mô hình bảng
 			DefaultTableModel model = (DefaultTableModel) table_1.getModel();
 			model.setRowCount(0);
-			
-		    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-		    table_1.setRowSorter(sorter);
+
+			TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+			table_1.setRowSorter(sorter);
 
 			// Đổ dữ liệu từ ResultSet vào mô hình bảng
 			while (resultSet.next()) {
-				int maDatPhong = resultSet.getInt("maDatPhong");
-				String tenPhong = resultSet.getString("tenPhong");
-				String tenLoaiPhong = resultSet.getString("tenLoaiPhong");
-				String tenNhanVien = resultSet.getString("tenNhanVien");
-				Date ngayO1 = resultSet.getDate("ngayBatDau");
-				Date ngayTra1 = resultSet.getDate("ngayKetThuc");
-				String trangThai = resultSet.getString("trangThai");
+			    int maDatPhong = resultSet.getInt("maDatPhong");
+			    String tenPhong = resultSet.getString("tenPhong");
+			    String tenLoaiPhong = resultSet.getString("tenLoaiPhong");
+			    String tenNhanVien = resultSet.getString("tenNhanVien");
+			    Date ngayO1 = resultSet.getDate("ngayBatDau");
+			    Date ngayTra1 = resultSet.getDate("ngayKetThuc");
+			    String trangThai = resultSet.getString("trangThai");
 
-				Vector<Object> row = new Vector<>();
-				row.add(maDatPhong);
-				row.add(tenPhong);
-				row.add(tenLoaiPhong);
-				row.add(tenNhanVien);
-				row.add(ngayO1);
-				row.add(ngayTra1);
-				row.add(trangThai);
-				model.addRow(row);
+			    Vector<Object> row = new Vector<>();
+			    row.add(maDatPhong);
+			    row.add(tenPhong);
+			    row.add(tenLoaiPhong);
+			    row.add(tenNhanVien);
+			    row.add(ngayO1);
+			    row.add(ngayTra1);
+			    row.add(trangThai);
+			    model.addRow(row);
+
+			    // Kiểm tra nếu mã đặt phòng = 22 thì set chỉ mục dòng được chọn
+			    if (maDatPhong == maDatPhongTuBooking) {
+			        int selectedRow = model.getRowCount() - 1; // Lấy chỉ mục dòng vừa thêm vào
+			        table_1.setRowSelectionInterval(selectedRow, selectedRow);
+			        filltable(maDatPhong);
+			    }
 			}
 
 			// Đóng ResultSet và Statement
@@ -371,6 +391,9 @@ public class PanelService extends JPanel {
 
 
 
+		
+		//tự chọn row
+		
 
 
 
@@ -386,52 +409,15 @@ public class PanelService extends JPanel {
 						int maDatPhong = (int) table_1.getValueAt(selectedRow, 0);
 
 						//fill table
+						filltable(maDatPhong);
+						
+						
+						
+						
+						
+						
+						
 						Connection conn = con.getConnection();
-						try {
-							PreparedStatement statement = conn.prepareStatement(
-									"SELECT cd.maChiTietDichVu AS machitietdichvu, dv.tenDichVu AS tendichvu, cd.soLuong, dv.donGia AS dongia, (cd.soLuong * dv.donGia) AS [thanhTien] " +
-											"FROM ChiTietDichVu cd " +
-											"JOIN DichVu dv ON cd.maDichVu = dv.maDichVu " +
-											"WHERE cd.maDatPhong = ?"
-									);
-
-
-							statement.setInt(1, maDatPhong);
-							ResultSet resultSet = statement.executeQuery();
-							DefaultTableModel model = (DefaultTableModel) table.getModel();
-							model.setRowCount(0);
-							
-						    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-						    table.setRowSorter(sorter);
-							
-							// In kết quả truy vấn
-							while(resultSet.next()) {
-
-
-								int maKChiTietDichVu = resultSet.getInt("maChiTietDichVu");
-								String tenDichVu = resultSet.getString("tenDichVu");
-								int soLuong = resultSet.getInt("soLuong");
-								int donGia = resultSet.getInt("donGia");
-								int thanhTien = resultSet.getInt("thanhTien");
-
-								// Tạo mô hình bảng
-
-								Vector<Object> row = new Vector<>();
-								row.add(maKChiTietDichVu);
-								row.add(tenDichVu);
-								row.add(soLuong);
-								row.add(donGia);
-								row.add(thanhTien);
-								model.addRow(row);
-
-							}
-
-
-
-
-
-
-
 							try {
 								String query = "SELECT p.tenPhong, lp.tenLoaiPhong " +
 										"FROM DatPhong dp " +
@@ -468,15 +454,7 @@ public class PanelService extends JPanel {
 
 
 
-							// Đóng ResultSet và PreparedStatement
-							resultSet.close();
-							statement.close();
-
-							// Đóng kết nối
-							conn.close();
-						} catch (SQLException e1) {
-							e1.printStackTrace();
-						}
+				
 
 						// Thực hiện các hành động khác tùy theo nhu cầu của bạn
 					}
@@ -640,6 +618,7 @@ public class PanelService extends JPanel {
 				        	    int rowsInserted = statement2.executeUpdate();
 				        	    if (rowsInserted > 0) {
 							    	Utils.MsgBox.alert(null, "Thêm thành công");
+							    	filltable(Integer.valueOf(maDatPhong));
 				        	    }
 
 				        	    statement2.close();
@@ -690,7 +669,7 @@ public class PanelService extends JPanel {
 		
 		
 		
-		//ấn vào nút xóa dịch vụ
+		//ấn nút xóa dịch vụ
 		btXoaDichVu.addActionListener(new ActionListener() {
 			
 			@Override
@@ -713,14 +692,17 @@ public class PanelService extends JPanel {
 				//lấy trạng thái
 				int selectedRow1 = table_1.getSelectedRow();
 				String trangThai=null;
-				if(selectedRow1==-1) {
+				String maDatPhong=null;
+				if(selectedRow1==-1) {					
 		    	}else {
-		    		trangThai = table_1.getValueAt(selectedRow, 6).toString();
+		    		trangThai = table_1.getValueAt(selectedRow1, 6).toString();
+		    		maDatPhong = table_1.getValueAt(selectedRow1, 0).toString();
+		    		System.out.println(maDatPhong);
 		    	}
 				
 				
 				if(trangThai.equalsIgnoreCase("Đã hoàn tất")) {
-			    	Utils.MsgBox.alert(null, "Phòng này đã hoàn tất, không thể thêm dịch vụ");
+			    	Utils.MsgBox.alert(null, "Phòng này đã hoàn tất, không thể xóa dịch vụ");
 			    	return;
 				}
 				
@@ -733,6 +715,7 @@ public class PanelService extends JPanel {
 	        	    int rowsInserted = statement.executeUpdate();
 	        	    if (rowsInserted > 0) {
 				    	Utils.MsgBox.alert(null, "Xóa thành công");
+				    	filltable(Integer.valueOf(maDatPhong));
 	        	    }else {
 	        	    	Utils.MsgBox.alert(null, "Dịch vụ này đã được xóa, vui lòng tải lại trang");    	
 	        	    }
@@ -749,7 +732,29 @@ public class PanelService extends JPanel {
 		
 		
 		
-		
+		txtTimMaDatPhong.addKeyListener((KeyListener) new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent event) {
+            	
+            }
+            @Override
+            public void keyReleased(KeyEvent event) {
+            	try {
+            		String timKiem = txtTimMaDatPhong.getText();
+                	if (timKiem.trim().length() != 0) {
+                		fillTableDatPhongTheoMa(timKiem);
+                	} else {
+                		fillTableDatPhong();
+                	}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+            }
+            @Override
+            public void keyPressed(KeyEvent event) {
+//                System.out.println("key pressed");
+            }
+        });
 		
 		
 		
@@ -759,4 +764,89 @@ public class PanelService extends JPanel {
 
 
 	}
+	
+	private void filltable(int maDatPhong) {
+		Utils.ConnectDatabase con = new ConnectDatabase();
+		Connection conn = con.getConnection();
+		try {
+			PreparedStatement statement = conn.prepareStatement(
+					"SELECT cd.maChiTietDichVu AS machitietdichvu, dv.tenDichVu AS tendichvu, cd.soLuong, dv.donGia AS dongia, (cd.soLuong * dv.donGia) AS [thanhTien] " +
+							"FROM ChiTietDichVu cd " +
+							"JOIN DichVu dv ON cd.maDichVu = dv.maDichVu " +
+							"WHERE cd.maDatPhong = ?"
+					);
+
+
+			statement.setInt(1, maDatPhong);
+			ResultSet resultSet = statement.executeQuery();
+			DefaultTableModel model = (DefaultTableModel) table.getModel();
+			model.setRowCount(0);
+			
+		    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+		    table.setRowSorter(sorter);
+			
+			// In kết quả truy vấn
+			while(resultSet.next()) {
+
+
+				int maKChiTietDichVu = resultSet.getInt("maChiTietDichVu");
+				String tenDichVu = resultSet.getString("tenDichVu");
+				int soLuong = resultSet.getInt("soLuong");
+				int donGia = resultSet.getInt("donGia");
+				int thanhTien = resultSet.getInt("thanhTien");
+
+				// Tạo mô hình bảng
+
+				Vector<Object> row = new Vector<>();
+				row.add(maKChiTietDichVu);
+				row.add(tenDichVu);
+				row.add(soLuong);
+				row.add(donGia);
+				row.add(thanhTien);
+				model.addRow(row);
+
+			}
+
+
+
+			// Đóng ResultSet và PreparedStatement
+			resultSet.close();
+			statement.close();
+
+			// Đóng kết nối
+			conn.close();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+	}
+	
+	private void fillTableDatPhongTheoMa(String id) {
+		DefaultTableModel tblModel = (DefaultTableModel) table_1.getModel();
+		tblModel.setRowCount(0);
+		try {
+			List<Object[]> lst = new HoaDonDAO().getThongTinDatPhongTheoMa(id);
+
+			for (Object[] objects : lst) {
+				tblModel.addRow(objects);
+			}
+		} catch (Exception e) {
+		}
+	}
+	
+	
+	private void fillTableDatPhong() {
+		DefaultTableModel tblModel = (DefaultTableModel) table_1.getModel();
+		tblModel.setRowCount(0);
+		try {
+			List<Object[]> lst = new HoaDonDAO().getThongTinDatPhong();
+
+			for (Object[] objects : lst) {
+				tblModel.addRow(objects);
+			}
+		} catch (Exception e) {
+		}
+
+	}
+	
 }
