@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -32,7 +33,12 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+
 import Utils.ConnectDatabase;
+import Utils.VietQR;
 
 public class PanelPrintBill extends JFrame {
 
@@ -197,9 +203,10 @@ public class PanelPrintBill extends JFrame {
 		lblSTiKhon.setBounds(25, 533, 197, 27);
 		contentPane.add(lblSTiKhon);
 		
+		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(PanelPrintBill.class.getResource("/Icon/QRResize.jpg")));
-		lblNewLabel.setBounds(295, 458, 125, 125);
+		lblNewLabel.setBounds(280, 450, 135, 135);
 		contentPane.add(lblNewLabel);
 		
 		JButton btThoat = new JButton("Thoát");
@@ -400,8 +407,46 @@ public class PanelPrintBill extends JFrame {
 				
 		        lbSoTongTien.setText(tongTien+" Đ");
 		
+		        VietQR vietQR = new VietQR();
+		        vietQR.setBeneficiaryOrganization("970422", "0550767799967")
+		              .setTransactionAmount(String.valueOf(tongTien))
+		              .setAdditionalDataFieldTemplate("Thanh Toan Tien Phong");
+
 			 
-			 
+		        
+		        //lấy ảnh QRCode
+		        String content = vietQR.build();
+		        int width = 160;
+		        int height = 160;
+
+		        try {
+		            BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, width, height);
+		            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+		            // Thêm margin bằng cách giảm giá trị x xuống (sang phải)
+		            int margin = 12;
+
+		            for (int x = 0; x < width - margin; x++) {
+		                for (int y = 0; y < height; y++) {
+		                    int rgbColor = bitMatrix.get(x + margin, y) ? 0x000000 : 0xFFFFFF;
+		                    image.setRGB(x, y, rgbColor);
+		                }
+		            }
+
+		            // Hiển thị hình ảnh
+		            lblNewLabel.setIcon(new ImageIcon(image));
+		            
+		        } catch (Exception e) {
+		            System.err.println("Error creating QR code: " + e.getMessage());
+		        }
+		        
+		        
+		        
+		        
+		        
+		        
+		        
+		        
 			 
 			 
 			 
